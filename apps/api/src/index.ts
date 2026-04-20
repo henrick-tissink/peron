@@ -1,10 +1,16 @@
 import { serve } from "@hono/node-server";
+import type { Station } from "@peron/types";
 import { Hono } from "hono";
 import { pathToFileURL } from "node:url";
 
 export const app = new Hono();
 
 app.get("/health", (c) => c.json({ status: "ok" }));
+
+app.get("/stations/sample", (c) => {
+  const sample: Station = { name: "București Nord", isImportant: true };
+  return c.json(sample);
+});
 
 const entry = process.argv[1];
 if (entry && import.meta.url === pathToFileURL(entry).href) {
