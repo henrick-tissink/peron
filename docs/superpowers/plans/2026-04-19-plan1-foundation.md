@@ -676,6 +676,8 @@ export default function Home() {
 /// <reference types="next/image-types/global" />
 ```
 
+Note: Next 16 auto-appends `import "./.next/types/routes.d.ts";` and a "do not edit" comment after the first `next build` (Step 4.11). Commit whatever Next produces — the file is Next-managed. The `tsconfig.json` include pattern `".next/types/**/*.ts"` guarantees the referenced file is reachable when it exists.
+
 - [ ] **Step 4.9: Install web deps**
 
 Run: `pnpm install`
