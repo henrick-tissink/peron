@@ -436,13 +436,15 @@ git commit -m "feat: add @peron/types shared contract package"
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist",
     "types": ["node"]
   },
   "include": ["src/**/*", "test/**/*"]
 }
 ```
+
+Note: `rootDir` is `.` not `src` — `include` covers both `src/` and `test/`, so TS needs a rootDir that encompasses both. Setting `rootDir: "src"` causes `error TS6059: File '…/test/health.test.ts' is not under 'rootDir'`.
 
 - [ ] **Step 3.3: Create `apps/api/vitest.config.ts`**
 
