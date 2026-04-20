@@ -7,6 +7,7 @@ export const app = new Hono();
 
 app.get("/health", (c) => c.json({ status: "ok" }));
 
+// SCAFFOLDING: proves @peron/types wiring; remove when /api/stations lands (Plan 2)
 app.get("/stations/sample", (c) => {
   const sample: Station = { name: "București Nord", isImportant: true };
   return c.json(sample);
