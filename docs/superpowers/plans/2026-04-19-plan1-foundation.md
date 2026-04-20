@@ -308,8 +308,8 @@ export type Itinerary = {
 - [ ] **Step 2.5: Create `packages/types/src/search.ts`**
 
 ```ts
-import type { Itinerary } from "./itinerary.ts";
-import type { SearchError } from "./error.ts";
+import type { Itinerary } from "./itinerary.js";
+import type { SearchError } from "./error.js";
 
 export type SearchRequest = {
   from: string;
@@ -326,6 +326,8 @@ export type SearchResponse = {
   };
 };
 ```
+
+Note: `.js` extensions in imports (not `.ts`) — this is the Node ESM convention that works correctly with `moduleResolution: Bundler` and `verbatimModuleSyntax: true` without requiring `allowImportingTsExtensions`.
 
 - [ ] **Step 2.6: Create `packages/types/src/price.ts`**
 
@@ -359,16 +361,16 @@ export type SearchError =
 - [ ] **Step 2.8: Create `packages/types/src/index.ts`**
 
 ```ts
-export type { Station } from "./station.ts";
+export type { Station } from "./station.js";
 export type {
   Itinerary,
   TrainSegment,
   Services,
   PriceFrom,
-} from "./itinerary.ts";
-export type { SearchRequest, SearchResponse } from "./search.ts";
-export type { PriceRequest, PriceResponse, FareTypeId } from "./price.ts";
-export type { SearchError } from "./error.ts";
+} from "./itinerary.js";
+export type { SearchRequest, SearchResponse } from "./search.js";
+export type { PriceRequest, PriceResponse, FareTypeId } from "./price.js";
+export type { SearchError } from "./error.js";
 ```
 
 - [ ] **Step 2.9: Install types deps**
@@ -459,7 +461,7 @@ export default defineConfig({
 
 ```ts
 import { describe, it, expect } from "vitest";
-import { app } from "../src/index.ts";
+import { app } from "../src/index.js";
 
 describe("GET /health", () => {
   it("responds 200 with { status: 'ok' }", async () => {
@@ -707,7 +709,7 @@ git commit -m "feat(web): scaffold Next.js 16 app with Tailwind v4"
 ```ts
 import { describe, it, expect } from "vitest";
 import type { Station } from "@peron/types";
-import { app } from "../src/index.ts";
+import { app } from "../src/index.js";
 
 describe("GET /health", () => {
   it("responds 200 with { status: 'ok' }", async () => {
