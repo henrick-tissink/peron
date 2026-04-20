@@ -18,8 +18,8 @@ export type Services = {
 export type PriceFrom = {
   amount: number;
   currency: "RON";
-  fareType: "Adult";
-  class: "1" | "2";
+  fareType: string;
+  class: string;
 };
 
 export type Itinerary = {
