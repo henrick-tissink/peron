@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+  --color-peron-blue: #2563eb;
+}
+
+html {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
