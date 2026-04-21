@@ -35,5 +35,8 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Build api
+        run: pnpm --filter @peron/api build
+
       - name: Build web
         run: pnpm --filter @peron/web build
