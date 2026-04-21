@@ -8,3 +8,4 @@ export type {
 export type { SearchRequest, SearchResponse } from "./search.js";
 export type { PriceRequest, PriceResponse, FareTypeId } from "./price.js";
 export type { SearchError } from "./error.js";
+export type { StationQuery, StationSearchResult } from "./stations-query.js";
