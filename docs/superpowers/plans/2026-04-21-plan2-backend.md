@@ -992,7 +992,7 @@ Expected: non-zero count (at least 3 — multiple direct trains Buc→Brașov). 
 - [ ] **Step 5.5: Commit fixtures and capture script**
 
 ```bash
-git add scripts/capture-fixtures.ts apps/api/test/fixtures/
+git add apps/api/scripts/capture-fixtures.ts apps/api/test/fixtures/
 git commit -m "test(api): golden HTML fixtures + capture-fixtures script"
 ```
 
