@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { http, HttpResponse } from "msw";
 import { server } from "../setup.js";
-import { bootstrap } from "../../src/cfr/client.js";
+import { bootstrap, searchRaw, type CfrSession } from "../../src/cfr/client.js";
 import { BootstrapError, CaptchaError } from "../../src/cfr/errors.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -69,5 +69,67 @@ describe("bootstrap", () => {
 
     await bootstrap("București Nord", "Brașov");
     expect(capturedPath).toBe("Bucuresti-Nord/Brasov");
+  });
+});
+
+describe("searchRaw", () => {
+  const session: CfrSession = {
+    cookie: "s=cookieval",
+    confirmationKey: "conf-key",
+    requestVerificationToken: "tok-val",
+  };
+
+  it("POSTs form-encoded body to GetItineraries with session cookie + tokens", async () => {
+    let capturedCookie = "";
+    let capturedBody = "";
+    server.use(
+      http.post(`${CFR_BASE}/ro-RO/Itineraries/GetItineraries`, async ({ request }) => {
+        capturedCookie = request.headers.get("cookie") ?? "";
+        capturedBody = await request.text();
+        return new HttpResponse("<ul><li id='li-itinerary-0'></li></ul>", {
+          status: 200,
+          headers: { "content-type": "text/html" },
+        });
+      }),
+    );
+
+    const html = await searchRaw(session, {
+      from: "București Nord",
+      to: "Brașov",
+      date: "2026-05-21",
+    });
+
+    expect(html).toContain("li-itinerary-0");
+    expect(capturedCookie).toContain("s=cookieval");
+    expect(capturedBody).toContain("DepartureStationName=Bucuresti+Nord");
+    expect(capturedBody).toContain("ArrivalStationName=Brasov");
+    expect(capturedBody).toContain("DepartureDate=21.05.2026");
+    expect(capturedBody).toContain("ConfirmationKey=conf-key");
+    expect(capturedBody).toContain("__RequestVerificationToken=tok-val");
+  });
+
+  it("throws CaptchaError when body is ReCaptchaFailed", async () => {
+    server.use(
+      http.post(`${CFR_BASE}/ro-RO/Itineraries/GetItineraries`, () =>
+        new HttpResponse("ReCaptchaFailed", { status: 200 }),
+      ),
+    );
+
+    await expect(
+      searchRaw(session, { from: "A", to: "B", date: "2026-05-21" }),
+    ).rejects.toBeInstanceOf(CaptchaError);
+  });
+
+  it("throws UpstreamError on 5xx", async () => {
+    server.use(
+      http.post(`${CFR_BASE}/ro-RO/Itineraries/GetItineraries`, () =>
+        new HttpResponse("internal", { status: 502 }),
+      ),
+    );
+
+    const { UpstreamError } = await import("../../src/cfr/errors.js");
+    await expect(
+      searchRaw(session, { from: "A", to: "B", date: "2026-05-21" }),
+    ).rejects.toBeInstanceOf(UpstreamError);
   });
 });
