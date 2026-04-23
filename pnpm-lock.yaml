@@ -38,6 +38,9 @@ importers:
       '@types/node':
         specifier: ^22.0.0
         version: 22.19.17
+      domhandler:
+        specifier: ^5.0.3
+        version: 5.0.3
       msw:
         specifier: ^2.6.0
         version: 2.13.4(@types/node@22.19.17)(typescript@5.9.3)
