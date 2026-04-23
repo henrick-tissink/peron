@@ -112,3 +112,44 @@ export async function searchRaw(
 
   return html;
 }
+
+export type PriceRawParams = {
+  transactionString: string;
+  fareTypeId: string;
+  serviceKey: string;
+};
+
+export async function priceRaw(
+  session: CfrSession,
+  params: PriceRawParams,
+): Promise<string> {
+  const body = toFormBody({
+    TransactionString: params.transactionString,
+    TicketFareTypeId: params.fareTypeId,
+    "TrainServiceKeys[0]": params.serviceKey,
+    __RequestVerificationToken: session.requestVerificationToken,
+  });
+
+  const res = await fetch(`${CFR_BASE}/api/ro-RO/Itineraries/Price`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "cookie": session.cookie,
+      "x-requested-with": "XMLHttpRequest",
+    },
+    body,
+  });
+
+  if (res.status >= 500) {
+    throw new UpstreamError(`Price returned ${res.status}`, res.status);
+  }
+
+  const html = await res.text();
+  if (html.trim() === "ReCaptchaFailed") {
+    throw new CaptchaError("price hit captcha");
+  }
+  if (res.status >= 400) {
+    throw new UpstreamError(`Price returned ${res.status}`, res.status);
+  }
+  return html;
+}

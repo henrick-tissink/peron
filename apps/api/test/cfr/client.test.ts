@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { http, HttpResponse } from "msw";
 import { server } from "../setup.js";
-import { bootstrap, searchRaw, type CfrSession } from "../../src/cfr/client.js";
+import { bootstrap, searchRaw, priceRaw, type CfrSession, type PriceRawParams } from "../../src/cfr/client.js";
 import { BootstrapError, CaptchaError } from "../../src/cfr/errors.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -131,5 +131,48 @@ describe("searchRaw", () => {
     await expect(
       searchRaw(session, { from: "A", to: "B", date: "2026-05-21" }),
     ).rejects.toBeInstanceOf(UpstreamError);
+  });
+});
+
+describe("priceRaw", () => {
+  const session: CfrSession = {
+    cookie: "s=ck",
+    confirmationKey: "ck",
+    requestVerificationToken: "tok",
+  };
+
+  const params: PriceRawParams = {
+    transactionString: "opaque-tx",
+    fareTypeId: "73",
+    serviceKey: "A&A",
+  };
+
+  it("POSTs form-encoded body to api/ro-RO/Itineraries/Price", async () => {
+    let capturedBody = "";
+    server.use(
+      http.post(`${CFR_BASE}/api/ro-RO/Itineraries/Price`, async ({ request }) => {
+        capturedBody = await request.text();
+        return new HttpResponse(`<span class="price">41,5 lei</span>`, {
+          status: 200,
+          headers: { "content-type": "text/html" },
+        });
+      }),
+    );
+
+    const html = await priceRaw(session, params);
+    expect(html).toContain("41,5 lei");
+    expect(capturedBody).toContain("TransactionString=opaque-tx");
+    expect(capturedBody).toContain("TicketFareTypeId=73");
+    expect(decodeURIComponent(capturedBody)).toContain("TrainServiceKeys[0]=A&A");
+  });
+
+  it("throws UpstreamError on 5xx", async () => {
+    server.use(
+      http.post(`${CFR_BASE}/api/ro-RO/Itineraries/Price`, () =>
+        new HttpResponse("down", { status: 503 }),
+      ),
+    );
+    const { UpstreamError } = await import("../../src/cfr/errors.js");
+    await expect(priceRaw(session, params)).rejects.toBeInstanceOf(UpstreamError);
   });
 });
