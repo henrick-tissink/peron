@@ -4,6 +4,16 @@ export function parseDuration(input: string): Duration {
   if (!input) return { hours: 0, minutes: 0 };
   const s = input.trim().toLowerCase();
 
+  // Romanian "ore"/"ora" (hours) — must be checked before the `h`-variant
+  // since "ora"/"ore" don't contain the "h" marker but still encode hours.
+  const roHm = s.match(/(\d+)\s*or[ae]\b(?:\s*(\d+)\s*min?)?/);
+  if (roHm && roHm[1]) {
+    return {
+      hours: parseInt(roHm[1], 10),
+      minutes: roHm[2] ? parseInt(roHm[2], 10) : 0,
+    };
+  }
+
   const hm = s.match(/(\d+)\s*h(?:\s+(\d+)\s*m(?:in)?)?/);
   if (hm && hm[1]) {
     return {
