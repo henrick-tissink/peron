@@ -1,8 +1,11 @@
+import * as cheerio from "cheerio";
 import type { CheerioAPI, Cheerio } from "cheerio";
 import type { AnyNode } from "domhandler";
+import type { SearchError } from "@peron/types";
 import { tryText } from "./selectors.js";
 import { parseDuration } from "./duration.js";
 import { toStationSlug } from "../cfr/slug.js";
+import { ItinerarySchema } from "./schemas.js";
 
 const CFR_BASE = "https://bilete.cfrcalatori.ro";
 
@@ -189,14 +192,23 @@ export function parseOne(
       }
     });
 
+  // Build segments from detected train category spans.
+  // The main row shows the overall dep/arr only; per-leg stations live in
+  // the collapsed details section. We fill from/to with overall endpoints
+  // for now — sufficient for transfer-count detection and Zod validation.
+  const depTime = parseTimeAttr(departTimeRaw);
+  const arrTime = parseTimeAttr(arriveTimeRaw);
+  const fromStation = depStation || "—";
+  const toStation = arrStationFinal || fromStation;
+
   const segments = segmentSeeds.length > 0
-    ? segmentSeeds.map((seed, i) => ({
+    ? segmentSeeds.map((seed) => ({
         trainCategory: seed.category,
         trainNumber: seed.number,
-        from: i === 0 ? depStation : "",
-        to: i === segmentSeeds.length - 1 ? arrStationFinal : "",
-        departTime: i === 0 ? parseTimeAttr(departTimeRaw) : "",
-        arriveTime: i === segmentSeeds.length - 1 ? parseTimeAttr(arriveTimeRaw) : "",
+        from: fromStation,
+        to: toStation,
+        departTime: depTime,
+        arriveTime: arrTime,
       }))
     : [];
 
@@ -236,12 +248,12 @@ export function parseOne(
     segments: segments.length > 0
       ? segments
       : [{
-          trainCategory: "",
-          trainNumber: "",
-          from: depStation,
-          to: arrStationFinal,
-          departTime: parseTimeAttr(departTimeRaw),
-          arriveTime: parseTimeAttr(arriveTimeRaw),
+          trainCategory: "—",
+          trainNumber: "0",
+          from: fromStation,
+          to: toStation,
+          departTime: depTime,
+          arriveTime: arrTime,
         }],
     transferCount,
     priceFrom:
@@ -259,5 +271,111 @@ export function parseOne(
     },
     trainDetailUrl,
     bookingUrl,
+  };
+}
+
+const PRIMARY_SELECTOR = 'li[id^="li-itinerary-"]';
+const FALLBACK_SELECTORS = [
+  "li.itinerary",
+  "div[class*='itinerary' i]",
+  "[data-itinerary]",
+];
+
+export type ParseResult = {
+  itineraries: RawItinerary[];
+  warning: SearchError | null;
+  meta: { parseSuccessRate: number; detectedCount: number };
+};
+
+export function parseItineraries(html: string, sessionId: string): ParseResult {
+  if (!html || html.trim().length === 0) {
+    return {
+      itineraries: [],
+      warning: { kind: "parser-failure", detail: "empty response body" },
+      meta: { parseSuccessRate: 0, detectedCount: 0 },
+    };
+  }
+
+  if (html.trim() === "ReCaptchaFailed" || html.includes("ReCaptchaFailed")) {
+    return {
+      itineraries: [],
+      warning: { kind: "captcha", retryAfterSec: 60 },
+      meta: { parseSuccessRate: 0, detectedCount: 0 },
+    };
+  }
+
+  const $ = cheerio.load(html);
+
+  function findItems() {
+    const primary = $(PRIMARY_SELECTOR);
+    if (primary.length > 0) return primary;
+    for (const sel of FALLBACK_SELECTORS) {
+      const found = $(sel);
+      if (found.length > 0) return found;
+    }
+    return primary; // empty
+  }
+  const $items = findItems();
+
+  const detectedCount = $items.length;
+
+  if (detectedCount === 0) {
+    const regexHits = html.match(/id="li-itinerary-\d+"/g) ?? [];
+    if (regexHits.length === 0) {
+      return {
+        itineraries: [],
+        warning: { kind: "no-results" },
+        meta: { parseSuccessRate: 1, detectedCount: 0 },
+      };
+    }
+    return {
+      itineraries: [],
+      warning: {
+        kind: "parser-failure",
+        detail: `regex detected ${regexHits.length} itineraries but cheerio selectors failed`,
+      },
+      meta: { parseSuccessRate: 0, detectedCount: regexHits.length },
+    };
+  }
+
+  const parsed: RawItinerary[] = [];
+  const errors: string[] = [];
+
+  $items.each((idx, el) => {
+    try {
+      const raw = parseOne($, $(el), sessionId, idx);
+      const result = ItinerarySchema.safeParse(raw);
+      if (result.success) {
+        parsed.push(raw);
+      } else {
+        errors.push(
+          `itinerary-${idx}: ${result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
+        );
+      }
+    } catch (err) {
+      errors.push(`itinerary-${idx}: ${(err as Error).message}`);
+    }
+  });
+
+  const parseSuccessRate = parsed.length / detectedCount;
+
+  let warning: SearchError | null = null;
+  if (parsed.length === 0 && detectedCount > 0) {
+    warning = {
+      kind: "parser-failure",
+      detail: `all ${detectedCount} itineraries failed validation: ${errors.slice(0, 3).join(" | ")}`,
+    };
+  } else if (parsed.length < detectedCount) {
+    warning = {
+      kind: "partial",
+      parsedCount: parsed.length,
+      detectedCount,
+    };
+  }
+
+  return {
+    itineraries: parsed,
+    warning,
+    meta: { parseSuccessRate, detectedCount },
   };
 }
