@@ -1,0 +1,56 @@
+import { Hono } from "hono";
+import { requestLogger, type PeronLogger } from "./middleware/logger.js";
+import { corsMiddleware } from "./middleware/cors.js";
+import { SessionPool } from "./pool/pool.js";
+import { PinMap } from "./pins.js";
+import { StationRegistry } from "./stations/registry.js";
+
+export type AppDeps = {
+  pool: SessionPool;
+  pins: PinMap;
+  stations: StationRegistry;
+};
+
+// Shared across app and all sub-routers so context typing stays consistent.
+// Do NOT use `declare module "hono"` augmentation — the explicit generic here
+// overrides ContextVariableMap, so we must include every Variables key explicitly.
+export type AppEnv = {
+  Variables: {
+    deps: AppDeps;
+    log: PeronLogger;
+    requestId: string;
+  };
+};
+
+export function makeApp(deps: AppDeps) {
+  const app = new Hono<AppEnv>();
+
+  app.use("*", corsMiddleware);
+  app.use("*", requestLogger);
+  app.use("*", async (c, next) => {
+    c.set("deps", deps);
+    await next();
+  });
+
+  app.get("/health", (c) =>
+    c.json({
+      status: "ok",
+      pool: { size: deps.pool.size, breakerOpen: deps.pool.breakerOpen },
+      stations: { cached: deps.stations.size },
+    }),
+  );
+
+  // SCAFFOLDING: to be removed in Task 24
+  app.get("/stations/sample", (c) =>
+    c.json({ name: "București Nord", isImportant: true }),
+  );
+
+  return app;
+}
+
+// Default app used by tests and dev: build fresh deps.
+export const app = makeApp({
+  pool: new SessionPool({ maxSize: 3 }),
+  pins: new PinMap({ ttlMs: 30 * 60 * 1000 }),
+  stations: new StationRegistry(),
+});
