@@ -43,11 +43,6 @@ export function makeApp(deps: AppDeps) {
     }),
   );
 
-  // SCAFFOLDING: to be removed in Task 24
-  app.get("/stations/sample", (c) =>
-    c.json({ name: "București Nord", isImportant: true }),
-  );
-
   app.route("/api/stations", stationsRoute());
   app.route("/api/search", searchRoute());
   app.route("/api/price", priceRoute());
