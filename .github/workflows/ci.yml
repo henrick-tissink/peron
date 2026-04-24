@@ -6,24 +6,26 @@ on:
     branches: [main]
 
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  build:
+  unit:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
@@ -35,8 +37,40 @@ jobs:
       - name: Test
         run: pnpm test
 
-      - name: Build api
-        run: pnpm --filter @peron/api build
-
       - name: Build web
         run: pnpm --filter @peron/web build
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: unit
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @peron/web exec playwright install --with-deps chromium
+
+      - name: Run E2E
+        run: pnpm --filter @peron/web test:e2e
+        env:
+          CI: "1"
+
+      - name: Upload Playwright traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: apps/web/test-results/
+          retention-days: 7
