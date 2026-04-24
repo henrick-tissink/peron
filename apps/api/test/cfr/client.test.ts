@@ -4,7 +4,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { http, HttpResponse } from "msw";
 import { server } from "../setup.js";
-import { bootstrap, searchRaw, priceRaw, type CfrSession, type PriceRawParams } from "../../src/cfr/client.js";
+import { bootstrap, searchRaw, priceRaw, fetchStationsPage, type CfrSession, type PriceRawParams } from "../../src/cfr/client.js";
 import { BootstrapError, CaptchaError } from "../../src/cfr/errors.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -174,5 +174,30 @@ describe("priceRaw", () => {
     );
     const { UpstreamError } = await import("../../src/cfr/errors.js");
     await expect(priceRaw(session, params)).rejects.toBeInstanceOf(UpstreamError);
+  });
+});
+
+describe("fetchStationsPage", () => {
+  it("fetches the landing page HTML", async () => {
+    server.use(
+      http.get(`${CFR_BASE}/ro-RO`, () =>
+        new HttpResponse("<html>landing</html>", {
+          status: 200,
+          headers: { "content-type": "text/html" },
+        }),
+      ),
+    );
+    const html = await fetchStationsPage();
+    expect(html).toContain("landing");
+  });
+
+  it("throws UpstreamError on non-2xx", async () => {
+    server.use(
+      http.get(`${CFR_BASE}/ro-RO`, () =>
+        new HttpResponse("gone", { status: 503 }),
+      ),
+    );
+    const { UpstreamError } = await import("../../src/cfr/errors.js");
+    await expect(fetchStationsPage()).rejects.toBeInstanceOf(UpstreamError);
   });
 });

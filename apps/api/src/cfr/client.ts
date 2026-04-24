@@ -153,3 +153,14 @@ export async function priceRaw(
   }
   return html;
 }
+
+export async function fetchStationsPage(): Promise<string> {
+  const res = await fetch(`${CFR_BASE}/ro-RO`, {
+    method: "GET",
+    headers: { "accept": "text/html" },
+  });
+  if (!res.ok) {
+    throw new UpstreamError(`stations landing returned ${res.status}`, res.status);
+  }
+  return res.text();
+}
