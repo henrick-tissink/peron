@@ -4,6 +4,7 @@ import { corsMiddleware } from "./middleware/cors.js";
 import { SessionPool } from "./pool/pool.js";
 import { PinMap } from "./pins.js";
 import { StationRegistry } from "./stations/registry.js";
+import { stationsRoute } from "./routes/stations.js";
 
 export type AppDeps = {
   pool: SessionPool;
@@ -44,6 +45,8 @@ export function makeApp(deps: AppDeps) {
   app.get("/stations/sample", (c) =>
     c.json({ name: "București Nord", isImportant: true }),
   );
+
+  app.route("/api/stations", stationsRoute());
 
   return app;
 }
