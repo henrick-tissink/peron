@@ -12,8 +12,14 @@ describe("extractAvailableStations", () => {
     const html = await readFile(resolve(FIX, "stations-landing.html"), "utf8");
     const stations = extractAvailableStations(html);
     expect(stations.length).toBeGreaterThan(1000);
-    const bucuresti = stations.find((s) => s.name.toLowerCase().includes("bucuresti"));
+    // Compare using diacritic-stripped lowercase so "București" matches "bucuresti".
+    // The registry itself preserves real diacritics — the frontend handles normalization on display.
+    const normalize = (s: string) =>
+      s.replace(/[ȘșŞş]/g, "s").replace(/[ȚțŢţ]/g, "t")
+        .normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+    const bucuresti = stations.find((s) => normalize(s.name).includes("bucuresti"));
     expect(bucuresti).toBeDefined();
+    expect(bucuresti?.name).toMatch(/Bucure[sș]ti/); // preserves real Romanian name
     for (const s of stations.slice(0, 10)) {
       expect(typeof s.name).toBe("string");
       expect(typeof s.isImportant).toBe("boolean");

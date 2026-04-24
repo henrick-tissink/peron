@@ -29,16 +29,7 @@ export function extractAvailableStations(html: string): Station[] {
       typeof (entry as { isImportant?: unknown }).isImportant === "boolean"
     ) {
       const e = entry as { name: string; isImportant: boolean };
-      // Normalize station name to ASCII for matching purposes
-      const normalizedName = e.name
-        .replace(/[ȘșŞş]/g, "s")
-        .replace(/[ȚțŢţ]/g, "t")
-        .replace(/[Ăă]/g, "a")
-        .replace(/[Ââ]/g, "a")
-        .replace(/[Îî]/g, "i")
-        .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, "");
-      valid.push({ name: normalizedName, isImportant: e.isImportant });
+      valid.push({ name: e.name, isImportant: e.isImportant });
     }
   }
   return valid;
