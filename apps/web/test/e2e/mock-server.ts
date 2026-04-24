@@ -1,8 +1,12 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
+import { cors } from "hono/cors";
 import { stations, searchResponse, priceResponse } from "./fixtures.js";
 
 const app = new Hono();
+
+// Enable CORS for all origins (needed for E2E tests)
+app.use("*", cors({ origin: "*" }));
 
 app.get("/health", (c) => c.text("ok"));
 
