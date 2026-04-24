@@ -48,4 +48,12 @@ export class Session {
       });
     });
   }
+
+  isStale(now: number, thresholdMs: number): boolean {
+    return now - this.lastWarmedAt > thresholdMs;
+  }
+
+  async refresh(from: string, to: string): Promise<void> {
+    await this.warm(from, to);
+  }
 }

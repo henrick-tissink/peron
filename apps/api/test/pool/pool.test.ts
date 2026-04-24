@@ -63,3 +63,26 @@ describe("SessionPool", () => {
     expect(pool.getById("nonexistent")).toBeUndefined();
   });
 });
+
+describe("SessionPool — age-based refresh", () => {
+  beforeEach(() => mockBootstrap());
+
+  it("refreshes a session older than the TTL before reuse", async () => {
+    const pool = new SessionPool({ maxSize: 1, staleAfterMs: 50 });
+    let firstWarmAt = 0;
+    await pool.withSession(async (s) => { firstWarmAt = s.lastWarmedAt; });
+    await new Promise((r) => setTimeout(r, 60));
+    await pool.withSession(async (s) => {
+      expect(s.lastWarmedAt).toBeGreaterThan(firstWarmAt);
+    });
+  });
+
+  it("does not refresh a session younger than TTL", async () => {
+    const pool = new SessionPool({ maxSize: 1, staleAfterMs: 10_000 });
+    let firstWarmAt = 0;
+    await pool.withSession(async (s) => { firstWarmAt = s.lastWarmedAt; });
+    await pool.withSession(async (s) => {
+      expect(s.lastWarmedAt).toBe(firstWarmAt);
+    });
+  });
+});

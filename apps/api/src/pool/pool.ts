@@ -5,21 +5,25 @@ export type PoolConfig = {
   maxSize: number;
   warmFrom?: string;
   warmTo?: string;
+  staleAfterMs?: number;
 };
 
 const DEFAULT_WARM_FROM = "Bucuresti-Nord";
 const DEFAULT_WARM_TO = "Brasov";
+const DEFAULT_STALE_MS = 15 * 60 * 1000; // 15 minutes
 
 export class SessionPool {
   readonly maxSize: number;
   private readonly warmFrom: string;
   private readonly warmTo: string;
+  private readonly staleAfterMs: number;
   private readonly sessions = new Map<string, Session>();
 
   constructor(cfg: PoolConfig) {
     this.maxSize = cfg.maxSize;
     this.warmFrom = cfg.warmFrom ?? DEFAULT_WARM_FROM;
     this.warmTo = cfg.warmTo ?? DEFAULT_WARM_TO;
+    this.staleAfterMs = cfg.staleAfterMs ?? DEFAULT_STALE_MS;
   }
 
   get size(): number {
@@ -60,8 +64,12 @@ export class SessionPool {
       session = alive[0]!;
     }
 
+    if (session.isStale(Date.now(), this.staleAfterMs)) {
+      await session.refresh(this.warmFrom, this.warmTo);
+    }
+
     try {
-      return await session.run((_creds) => fn(session!));
+      return await session.run(() => fn(session!));
     } catch (err) {
       if (err instanceof Error && err.name === "CaptchaError") {
         session.kill("captcha");
