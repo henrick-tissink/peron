@@ -1,8 +1,16 @@
 import "./globals.css";
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata = {
-  title: "Peron",
-  description: "A cleaner frontend for Romanian train search",
+  title: "Peron — train search for Romania",
+  description:
+    "A cleaner, faster, mobile-friendly frontend for Romania's national rail network.",
 };
 
 export default function RootLayout({
@@ -11,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ro" className="bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
-      <body className="antialiased">{children}</body>
+    <html lang="ro" className={inter.variable}>
+      <body>{children}</body>
     </html>
   );
 }
