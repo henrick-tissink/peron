@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { http, HttpResponse } from "msw";
 import { server } from "../setup.js";
 import { SessionPool } from "../../src/pool/pool.js";
+import { CaptchaError } from "../../src/cfr/errors.js";
 
 const CFR_BASE = "https://bilete.cfrcalatori.ro";
 
@@ -84,5 +85,34 @@ describe("SessionPool — age-based refresh", () => {
     await pool.withSession(async (s) => {
       expect(s.lastWarmedAt).toBe(firstWarmAt);
     });
+  });
+});
+
+describe("SessionPool — circuit breaker", () => {
+  it("rejects with CaptchaError when breaker is open, without touching CFR", async () => {
+    mockBootstrap();
+    const pool = new SessionPool({
+      maxSize: 3,
+      breaker: { threshold: 3, windowMs: 60_000, cooldownMs: 120_000 },
+    });
+
+    server.use(
+      http.post("https://bilete.cfrcalatori.ro/ro-RO/Itineraries/GetItineraries", () =>
+        new HttpResponse("ReCaptchaFailed", { status: 200 }),
+      ),
+    );
+
+    for (let i = 0; i < 3; i++) {
+      try {
+        await pool.withSession(async (s) => {
+          const { searchRaw } = await import("../../src/cfr/client.js");
+          await searchRaw((s as unknown as { creds_: { cookie: string; confirmationKey: string; requestVerificationToken: string } }).creds_, { from: "A", to: "B", date: "2026-05-21" });
+        });
+      } catch {}
+    }
+
+    await expect(
+      pool.withSession(async () => "should-not-run"),
+    ).rejects.toBeInstanceOf(CaptchaError);
   });
 });

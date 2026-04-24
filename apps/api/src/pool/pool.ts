@@ -1,11 +1,14 @@
 import { nanoid } from "nanoid";
 import { Session } from "./session.js";
+import { CircuitBreaker, type BreakerConfig } from "./breaker.js";
+import { CaptchaError, UpstreamError } from "../cfr/errors.js";
 
 export type PoolConfig = {
   maxSize: number;
   warmFrom?: string;
   warmTo?: string;
   staleAfterMs?: number;
+  breaker?: BreakerConfig;
 };
 
 const DEFAULT_WARM_FROM = "Bucuresti-Nord";
@@ -18,12 +21,16 @@ export class SessionPool {
   private readonly warmTo: string;
   private readonly staleAfterMs: number;
   private readonly sessions = new Map<string, Session>();
+  private readonly breaker: CircuitBreaker;
 
   constructor(cfg: PoolConfig) {
     this.maxSize = cfg.maxSize;
     this.warmFrom = cfg.warmFrom ?? DEFAULT_WARM_FROM;
     this.warmTo = cfg.warmTo ?? DEFAULT_WARM_TO;
     this.staleAfterMs = cfg.staleAfterMs ?? DEFAULT_STALE_MS;
+    this.breaker = new CircuitBreaker(
+      cfg.breaker ?? { threshold: 3, windowMs: 60_000, cooldownMs: 120_000 },
+    );
   }
 
   get size(): number {
@@ -52,6 +59,13 @@ export class SessionPool {
    * - Else → pick the least-busy existing session (shortest queue) and enqueue.
    */
   async withSession<T>(fn: (s: Session) => Promise<T>): Promise<T> {
+    const now = Date.now();
+    if (this.breaker.isOpen(now)) {
+      throw new CaptchaError(
+        `pool breaker open; retry in ${this.breaker.retryAfterSec(now)}s`,
+      );
+    }
+
     const alive = [...this.sessions.values()].filter((s) => s.state !== "dead");
 
     let session: Session | undefined = alive.find((s) => s.state === "fresh");
@@ -71,14 +85,48 @@ export class SessionPool {
     try {
       return await session.run(() => fn(session!));
     } catch (err) {
-      if (err instanceof Error && err.name === "CaptchaError") {
+      if (err instanceof CaptchaError) {
         session.kill("captcha");
         this.evict(session.id);
+        this.breaker.record(Date.now());
       } else if (err instanceof Error && err.name === "UpstreamError") {
         session.kill("upstream");
         this.evict(session.id);
       }
       throw err;
     }
+  }
+
+  async withPinnedSession<T>(
+    sessionId: string,
+    fn: (s: Session) => Promise<T>,
+  ): Promise<T> {
+    const now = Date.now();
+    if (this.breaker.isOpen(now)) {
+      throw new CaptchaError(
+        `pool breaker open; retry in ${this.breaker.retryAfterSec(now)}s`,
+      );
+    }
+    const session = this.sessions.get(sessionId);
+    if (!session || session.state === "dead") {
+      throw new UpstreamError(`pinned session ${sessionId} unavailable`, 410);
+    }
+    try {
+      return await session.run(() => fn(session));
+    } catch (err) {
+      if (err instanceof CaptchaError) {
+        session.kill("captcha");
+        this.evict(session.id);
+        this.breaker.record(Date.now());
+      } else if (err instanceof Error && err.name === "UpstreamError") {
+        session.kill("upstream");
+        this.evict(session.id);
+      }
+      throw err;
+    }
+  }
+
+  get breakerOpen(): boolean {
+    return this.breaker.isOpen(Date.now());
   }
 }
