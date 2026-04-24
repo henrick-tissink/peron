@@ -2,7 +2,7 @@
 
 import { useId, useMemo, useState } from "react";
 import type { Station } from "@peron/types";
-import { matches } from "../lib/normalize.js";
+import { matches } from "../lib/normalize";
 
 const MAX_SUGGESTIONS = 8;
 

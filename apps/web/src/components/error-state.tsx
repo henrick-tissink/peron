@@ -1,5 +1,5 @@
 import type { SearchError } from "@peron/types";
-import { CfrLink } from "./cfr-link.js";
+import { CfrLink } from "./cfr-link";
 
 export type ErrorQuery = { from: string; to: string; date: string };
 

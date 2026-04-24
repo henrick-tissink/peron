@@ -3,7 +3,7 @@
 import { useState, type ReactNode } from "react";
 import type { Itinerary } from "@peron/types";
 import { Bike, UtensilsCrossed, Moon, Bed } from "lucide-react";
-import { CfrLink } from "./cfr-link.js";
+import { CfrLink } from "./cfr-link";
 
 function transferLabel(n: number): string {
   if (n === 0) return "Direct";

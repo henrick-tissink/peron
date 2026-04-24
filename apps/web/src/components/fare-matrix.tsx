@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import type { FareTypeId, PriceResponse } from "@peron/types";
-import { FARE_TYPES, SERVICE_KEYS, type ServiceKey } from "../lib/fares.js";
-import { fetchPrice } from "../lib/api.js";
-import { Skeleton } from "./skeleton.js";
+import { FARE_TYPES, SERVICE_KEYS, type ServiceKey } from "../lib/fares";
+import { fetchPrice } from "../lib/api";
+import { Skeleton } from "./skeleton";
 
 type CellKey = `${FareTypeId}:${ServiceKey}`;
 type CellState =

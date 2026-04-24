@@ -1,9 +1,9 @@
 "use client";
 
 import type { SearchResponse } from "@peron/types";
-import { ItineraryCard } from "./itinerary-card.js";
-import { FareMatrix } from "./fare-matrix.js";
-import { ErrorState, type ErrorQuery } from "./error-state.js";
+import { ItineraryCard } from "./itinerary-card";
+import { FareMatrix } from "./fare-matrix";
+import { ErrorState, type ErrorQuery } from "./error-state";
 
 export function ResultsList({
   data,

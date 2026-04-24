@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Station } from "@peron/types";
 import { ArrowLeftRight } from "lucide-react";
-import { StationAutocomplete } from "./station-autocomplete.js";
-import { DatePicker, defaultDatePickerValue } from "./date-picker.js";
+import { StationAutocomplete } from "./station-autocomplete";
+import { DatePicker, defaultDatePickerValue } from "./date-picker";
 
 export function SearchForm({
   stations,
