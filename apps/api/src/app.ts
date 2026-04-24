@@ -6,6 +6,7 @@ import { PinMap } from "./pins.js";
 import { StationRegistry } from "./stations/registry.js";
 import { stationsRoute } from "./routes/stations.js";
 import { searchRoute } from "./routes/search.js";
+import { priceRoute } from "./routes/price.js";
 
 export type AppDeps = {
   pool: SessionPool;
@@ -49,6 +50,7 @@ export function makeApp(deps: AppDeps) {
 
   app.route("/api/stations", stationsRoute());
   app.route("/api/search", searchRoute());
+  app.route("/api/price", priceRoute());
 
   return app;
 }
