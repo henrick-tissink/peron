@@ -623,6 +623,16 @@ SENTRY_AUTH_TOKEN=
 GIT_COMMIT_SHA=
 ```
 
+- [ ] **Step 7b: Switch build script to webpack**
+
+Sentry's webpack plugin (used by `withSentryConfig` for source-map upload) is incompatible with Next 16's default Turbopack mode. Edit `apps/web/package.json`:
+
+```json
+"build": "next build --webpack",
+```
+
+Dev script (`next dev -p 3000`) keeps Turbopack — the divergence is acceptable since rendering output is identical and webpack-build is only used in CI/Docker.
+
 - [ ] **Step 8: Build verifies**
 
 ```bash
