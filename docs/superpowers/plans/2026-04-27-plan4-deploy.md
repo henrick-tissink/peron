@@ -45,7 +45,11 @@ export default defineConfig({
   target: "node22",
   platform: "node",
   bundle: true,
-  noExternal: [/.*/], // bundle EVERYTHING including @peron/types
+  // Inline @peron/types because it ships raw .ts (no build step). Everything
+  // else stays external — production node_modules is shipped in the runtime
+  // Docker image. Attempts to bundle pino, cheerio, etc. fail because their
+  // CJS internals use dynamic requires that don't survive ESM bundling.
+  noExternal: ["@peron/types"],
   outDir: "dist",
   clean: true,
   sourcemap: true,
@@ -54,6 +58,8 @@ export default defineConfig({
   minify: false,
 });
 ```
+
+**Note on bundling scope:** Aggressive bundling (`noExternal: [/.*/]`) was attempted and rejected — pino, cheerio, and their transitive deps (`thread-stream`, `iconv-lite`, `safer-buffer`) use dynamic `require()` calls that the ESM bundler converts to a `__require` shim that can't resolve at runtime. The minimal-viable change is bundling only `@peron/types`, which fixes the actual production blocker (Node can't import a `.ts` file). Other deps come from `node_modules` in the runtime image — Task 2's Dockerfile installs production deps for this reason.
 
 - [ ] **Step 3: Update `apps/api/package.json` build script**
 
@@ -77,23 +83,20 @@ kill %1
 
 Expected: JSON like `{"status":"ok","pool":{"size":0,"breakerOpen":false},"stations":{"cached":0}}`.
 
-- [ ] **Step 6: Verify bundle is self-contained (no node_modules needed)**
+- [ ] **Step 6: Verify @peron/types is inlined (the actual production blocker)**
 
 ```bash
-mkdir /tmp/api-iso && cp apps/api/dist/index.js /tmp/api-iso/
-cd /tmp/api-iso && node index.js &
-sleep 2 && curl -s http://localhost:3001/health
-kill %1 && cd - && rm -rf /tmp/api-iso
+grep -c '"@peron/types"' apps/api/dist/index.js
 ```
 
-Expected: same JSON. If it fails with `Cannot find module`, tsup's `noExternal` didn't bundle something — fix by adding the package name to the array.
+Expected: `0` — meaning no runtime import of `@peron/types` remains; the types are fully inlined. The bundle still imports hono/cheerio/zod/pino externally, which is fine because Task 2's Docker image ships production `node_modules`.
 
 - [ ] **Step 7: Commit**
 
 ```bash
 git add apps/api/package.json apps/api/tsup.config.ts pnpm-lock.yaml
 git rm apps/api/tsconfig.build.json
-git commit -m "build(api): switch to tsup single-file bundle for production"
+git commit -m "build(api): switch to tsup bundle (inline @peron/types only)"
 ```
 
 ---
@@ -140,15 +143,23 @@ COPY packages/types ./packages/types
 COPY apps/api ./apps/api
 RUN pnpm --filter @peron/api build
 
+# Use pnpm deploy to materialize a flat node_modules with only production deps.
+# This produces /app/deploy/{node_modules,package.json} ready to copy.
+RUN pnpm --filter @peron/api deploy --prod --legacy /app/deploy
+
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
+COPY --from=builder /app/deploy/node_modules ./node_modules
+COPY --from=builder /app/deploy/package.json ./package.json
 COPY --from=builder /app/apps/api/dist/index.js ./index.js
 COPY --from=builder /app/apps/api/dist/index.js.map ./index.js.map
 EXPOSE 3001
 USER node
 CMD ["node", "--enable-source-maps", "index.js"]
 ```
+
+**Note:** `pnpm deploy --prod` flattens the workspace into a self-contained directory with only production dependencies. The runtime image is ~80-120MB (alpine + node + production node_modules + bundle). Build cache is layered so subsequent rebuilds with unchanged deps are fast.
 
 - [ ] **Step 3: Build the image locally**
 
