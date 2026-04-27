@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import { Hono } from "hono";
 import { z } from "zod";
 import type { SearchResponse } from "@peron/types";
@@ -90,6 +91,7 @@ export function searchRoute() {
       }
       const errorId = crypto.randomUUID();
       log.error({ msg: "search.error", errorId, err: (err as Error).message });
+      Sentry.captureException(err, { tags: { errorId, route: "search" } });
       const response: SearchResponse = {
         itineraries: [],
         warning: { kind: "our-bug", errorId },

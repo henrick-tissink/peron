@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import { Hono } from "hono";
 import { z } from "zod";
 import type { PriceResponse } from "@peron/types";
@@ -60,6 +61,7 @@ export function priceRoute() {
         return c.json({ ok: false, reason: "unavailable" } satisfies PriceResponse);
       }
       log.error({ msg: "price.error", err: (err as Error).message });
+      Sentry.captureException(err, { tags: { route: "price" } });
       return c.json({ ok: false, reason: "unavailable" } satisfies PriceResponse, 500);
     }
   });

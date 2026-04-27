@@ -1,3 +1,14 @@
+import * as Sentry from "@sentry/node";
+
+if (process.env.SENTRY_DSN_API) {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN_API,
+    environment: process.env.NODE_ENV ?? "development",
+    tracesSampleRate: 0.1,
+    ...(process.env.GIT_COMMIT_SHA ? { release: process.env.GIT_COMMIT_SHA } : {}),
+  });
+}
+
 import { serve } from "@hono/node-server";
 import { pathToFileURL } from "node:url";
 import { app } from "./app.js";

@@ -13,6 +13,7 @@
   "dependencies": {
     "@hono/node-server": "^1.13.0",
     "@peron/types": "workspace:*",
+    "@sentry/node": "^8.40.0",
     "cheerio": "^1.0.0",
     "hono": "^4.10.8",
     "hono-rate-limiter": "^0.5.3",
