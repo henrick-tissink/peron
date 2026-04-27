@@ -1,0 +1,28 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - LOG_LEVEL=debug
+      - PERON_WEB_ORIGIN=http://localhost:3000
+      - CFR_BASE_URL=https://bilete.cfrcalatori.ro
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      # Server-side fetch from web -> api uses container DNS
+      - API_URL=http://api:3001
+      # Client-side fetch from browser -> api uses host loopback
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    depends_on:
+      - api
+    restart: unless-stopped
