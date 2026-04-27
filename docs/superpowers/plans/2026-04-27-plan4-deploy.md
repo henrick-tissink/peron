@@ -263,6 +263,15 @@ test -f .dockerignore && grep -q "test-results" .dockerignore && echo OK
 
 Expected: `OK`. If missing, copy the block from Task 2 Step 1 and put it at repo root.
 
+- [ ] **Step 1b: Ensure `apps/web/public/` exists**
+
+Next 16 doesn't auto-create `public/` when a project has no static assets, but the runner stage's `COPY ... /app/apps/web/public` needs it to exist. If missing:
+
+```bash
+mkdir -p apps/web/public && touch apps/web/public/.gitkeep
+git add apps/web/public/.gitkeep
+```
+
 - [ ] **Step 2: Create `apps/web/Dockerfile`**
 
 ```dockerfile
