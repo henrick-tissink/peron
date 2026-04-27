@@ -145,7 +145,7 @@ RUN pnpm --filter @peron/api build
 
 # Use pnpm deploy to materialize a flat node_modules with only production deps.
 # This produces /app/deploy/{node_modules,package.json} ready to copy.
-RUN pnpm --filter @peron/api deploy --prod --legacy /app/deploy
+RUN pnpm --filter @peron/api deploy --prod /app/deploy
 
 FROM node:22-alpine AS runner
 WORKDIR /app
