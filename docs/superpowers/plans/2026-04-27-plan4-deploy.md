@@ -105,20 +105,23 @@ git commit -m "build(api): switch to tsup bundle (inline @peron/types only)"
 
 **Files:**
 - Create: `apps/api/Dockerfile`
-- Create: `apps/api/.dockerignore`
+- Create: `/.dockerignore` (repo root — covers both api and web; Docker only honors `.dockerignore` at the build context root)
 
-- [ ] **Step 1: Create `apps/api/.dockerignore`**
+- [ ] **Step 1: Create `/.dockerignore`** (repo root, NOT inside `apps/api`)
 
 ```
-node_modules
-dist
-.next
-coverage
-test
-.env
-.env.*
-*.log
-.DS_Store
+**/node_modules
+**/dist
+**/.next
+**/coverage
+**/test
+**/test-results
+**/playwright-report
+**/.env
+**/.env.*
+**/*.log
+**/.DS_Store
+.git
 ```
 
 - [ ] **Step 2: Create `apps/api/Dockerfile`**
@@ -250,22 +253,15 @@ git commit -m "build(web): enable Next standalone output for monorepo"
 
 **Files:**
 - Create: `apps/web/Dockerfile`
-- Create: `apps/web/.dockerignore`
+- (No per-app `.dockerignore` — the root `/.dockerignore` from Task 2 covers both apps.)
 
-- [ ] **Step 1: Create `apps/web/.dockerignore`**
+- [ ] **Step 1: Verify root `/.dockerignore` from Task 2 is in place**
 
+```bash
+test -f .dockerignore && grep -q "test-results" .dockerignore && echo OK
 ```
-node_modules
-.next
-coverage
-test
-test-results
-playwright-report
-.env
-.env.*
-*.log
-.DS_Store
-```
+
+Expected: `OK`. If missing, copy the block from Task 2 Step 1 and put it at repo root.
 
 - [ ] **Step 2: Create `apps/web/Dockerfile`**
 
