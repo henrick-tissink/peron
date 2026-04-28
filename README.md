@@ -15,8 +15,14 @@ pnpm dev:web    # Next.js frontend at :3000
 
 ## Packages
 
-- `apps/web` — Next.js 16 frontend (Vercel deploy target)
-- `apps/api` — Hono backend + CFR proxy (Fly.io deploy target)
+- `apps/web` — Next.js 16 frontend
+- `apps/api` — Hono backend + CFR proxy
 - `packages/types` — Shared JSON contract
 
 See `docs/superpowers/specs/` for design docs.
+
+## Production
+
+Live at https://garalagara.com (web) + https://api.garalagara.com (api).
+Single Hetzner CX22 + Coolify; see `docs/superpowers/plans/2026-04-27-plan4-deploy.md`
+and `docs/runbook.md`.

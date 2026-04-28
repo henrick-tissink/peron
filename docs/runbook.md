@@ -43,3 +43,18 @@ Coolify-specific gotchas resolved during initial setup (2026-04-28):
 1. Check Sentry for spike in `kind:captcha` warnings.
 2. If sustained, set `CFR_PROXY_URL=<residential-proxy-url>` env var on api, redeploy.
 3. Re-run canary: `./scripts/canary.sh`.
+
+## Baseline metrics (post Plan 4 deploy, 2026-04-28)
+- parseSuccessRate baseline: **1.0** (Bucuresti-Nord → Brasov, T+1)
+- /health (cold): ~440ms over CF→origin
+- /api/search end-to-end: ~1.37s (bootstrap + scrape + parse)
+- 20 itineraries returned for the baseline route
+
+Re-measure monthly. Sustained drop below 0.9 → open issue, check selectors against fresh CFR HTML.
+
+## CFR form-schema regression playbook
+If `/api/search` starts returning `cfr-unavailable httpStatus: 400` reliably (and CFR is reachable),
+CFR has changed their `SearchModel` again:
+1. From the box, GET `https://bilete.cfrcalatori.ro/ro-RO/Rute-trenuri/Bucuresti-Nord/Brasov`
+2. Diff the `<input>` fields against `apps/api/src/cfr/client.ts` `searchRaw()` form body
+3. Add any new required fields, remove any that 400-trigger as unknown, push, redeploy
