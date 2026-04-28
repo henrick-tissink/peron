@@ -16,3 +16,4 @@ coverage/
 .output/
 
 .deploy-secrets/
+creds/
