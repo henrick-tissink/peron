@@ -17,3 +17,5 @@ coverage/
 
 .deploy-secrets/
 creds/
+.superpowers/
+.worktrees/
