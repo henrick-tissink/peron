@@ -1,63 +1,47 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Brand / rail accent */
-  --color-peron-blue: #2563eb;
-  --color-peron-blue-hover: #1d4ed8;
-  --color-peron-blue-soft: #eff6ff;
+  /* Surfaces */
+  --color-bg: #0a0a0a;
+  --color-bg-subtle: #0f0f0f;
+  --color-bg-elev: #1a1a1a;
+  --color-border: #1a1a1a;
+  --color-border-strong: #2a2a2a;
 
-  /* Semantic */
+  /* Text */
+  --color-text: #fafafa;
+  --color-text-muted: #a3a3a3;
+  --color-text-subtle: #525252;
+
+  /* Accent + status */
+  --color-accent: #f59e0b;
   --color-ok: #16a34a;
-  --color-warn: #d97706;
   --color-err: #dc2626;
 
-  /* Surfaces & text (light mode defaults; see below for dark overrides) */
-  --color-bg: #ffffff;
-  --color-bg-subtle: #fafafa;
-  --color-bg-muted: #f4f4f5;       /* zinc-100 */
-  --color-border: #e4e4e7;         /* zinc-200 */
-  --color-text: #18181b;           /* zinc-900 */
-  --color-text-muted: #71717a;     /* zinc-500 */
-  --color-text-subtle: #a1a1aa;    /* zinc-400 */
-
   /* Radii */
-  --radius-card: 10px;
-  --radius-control: 8px;
+  --radius-card: 8px;
+  --radius-control: 6px;
 
-  /* Font families (Inter injected via next/font/google in layout.tsx) */
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  /* Fonts (variables set in layout.tsx via next/font) */
+  --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme inline {
-    --color-bg: #09090b;           /* zinc-950 */
-    --color-bg-subtle: #18181b;    /* zinc-900 */
-    --color-bg-muted: #27272a;     /* zinc-800 */
-    --color-border: #3f3f46;       /* zinc-700 */
-    --color-text: #fafafa;         /* zinc-50 */
-    --color-text-muted: #a1a1aa;   /* zinc-400 */
-    --color-text-subtle: #71717a;  /* zinc-500 */
-
-    --color-peron-blue-soft: #1e3a8a;
-  }
+@layer base {
+  html { background: var(--color-bg); color: var(--color-text); font-family: var(--font-sans); }
+  body { background: var(--color-bg); color: var(--color-text); }
+  ::selection { background: var(--color-accent); color: var(--color-bg); }
 }
 
-html {
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  font-size: 14px;
-  line-height: 1.4;
+/* Live-pulse animation for status dots */
+@keyframes pulse-amber {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 }
+.pulse { animation: pulse-amber 1.5s ease-in-out infinite; }
 
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Utility for time strings: monospace + tabular */
-.num-time {
-  font-family: var(--font-mono);
-  font-variant-numeric: tabular-nums;
+/* Reduced-motion respect */
+@media (prefers-reduced-motion: reduce) {
+  .pulse { animation: none; }
+  * { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
 }
