@@ -14,10 +14,15 @@
 
 Hardening applied (manual cloud-init equivalent on 2026-04-28):
 - `peron` user with NOPASSWD sudo
-- Root SSH and password auth disabled (`/etc/ssh/sshd_config.d/99-peron-hardening.conf`)
-- UFW: 22, 80, 443, 8000 only
+- Password auth disabled; root SSH is `prohibit-password` (key-only) — Coolify needs root over SSH to manage the host (`/etc/ssh/sshd_config.d/99-peron-hardening.conf`)
+- UFW: 22, 80, 443, 8000 from anywhere; plus 22/tcp from `10.0.0.0/24` for Coolify's docker bridge
 - fail2ban active
 - 2G swapfile
+
+Coolify-specific gotchas resolved during initial setup (2026-04-28):
+- Coolify pins `host.docker.internal` to `docker0`'s gateway (10.0.0.1) at container-create time, but Ubuntu/Docker leaves `docker0` admin-DOWN when no containers are on it, breaking the localhost-server SSH check ("Server is not reachable").
+- Fix: systemd unit `docker0-keepup.service` runs `ip link set docker0 up` after `docker.service` on every boot. Status: `systemctl status docker0-keepup`.
+- If "Server is not reachable" recurs after a reboot, run `sudo ip link set docker0 up` and click "Validate Server" in the Coolify dashboard.
 
 ## Stack
 - Coolify v4 (Docker) — dashboard at http://178.105.66.66:8000
