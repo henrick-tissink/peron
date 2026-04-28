@@ -76,14 +76,31 @@ export async function searchRaw(
   session: CfrSession,
   params: SearchParams,
 ): Promise<string> {
+  // CFR's GetItineraries endpoint runs ASP.NET Core ModelBinding against the
+  // full SearchModel; missing required fields → 400. Mirror every <input> from
+  // /ro-RO/Rute-trenuri/{from}/{to} verbatim (the page's prefilled defaults).
   const body = toFormBody({
     DepartureStationName: params.from.replace(/[ȘșŞş]/g, "s").replace(/[ȚțŢţ]/g, "t").normalize("NFD").replace(/\p{Diacritic}/gu, ""),
     ArrivalStationName: params.to.replace(/[ȘșŞş]/g, "s").replace(/[ȚțŢţ]/g, "t").normalize("NFD").replace(/\p{Diacritic}/gu, ""),
     DepartureDate: toCfrDate(params.date),
     ConfirmationKey: session.confirmationKey,
     __RequestVerificationToken: session.requestVerificationToken,
-    PassengerCount: "1",
-    IsInternational: "false",
+    ConnectionsTypeId: "1",
+    MinutesInDay: "0",
+    OrderingTypeId: "0",
+    TimeSelectionId: "0",
+    BetweenTrainsMinimumMinutes: "15",
+    ArrivalTrainRunningNumber: "",
+    DepartureTrainRunningNumber: "",
+    ChangeStationName: "",
+    PrmRequestStringId: "",
+    ReCaptcha: "",
+    IsBikesServiceRequired: "False",
+    IsOnlineBuyingRequired: "False",
+    IsBarRestaurantServiceRequired: "False",
+    IsSleeperCouchetteServiceRequired: "False",
+    IsSearchWanted: "False",
+    IsReCaptchaFailed: "False",
   });
 
   const res = await fetch(`${CFR_BASE}/ro-RO/Itineraries/GetItineraries`, {
