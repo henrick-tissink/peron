@@ -1,6 +1,6 @@
 import type { Station } from "@peron/types";
-import { fetchStations } from "../lib/api";
-import { SearchForm } from "../components/search-form";
+import { fetchStations } from "../../lib/api";
+import { SearchForm } from "../../components/search-form";
 
 async function loadStations(): Promise<Station[]> {
   try {

@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import type { SearchResponse } from "@peron/types";
-import { searchItineraries, ApiError } from "../../lib/api";
-import { ResultsList } from "../../components/results-list";
-import { ErrorState } from "../../components/error-state";
+import { searchItineraries, ApiError } from "../../../lib/api";
+import { ResultsList } from "../../../components/results-list";
+import { ErrorState } from "../../../components/error-state";
 
 const QuerySchema = z.object({
   from: z.string().min(1),
