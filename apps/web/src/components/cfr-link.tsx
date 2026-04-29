@@ -24,7 +24,7 @@ export function CfrLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center gap-1 font-medium text-[var(--color-peron-blue)] hover:underline ${className}`}
+      className={`bg-[var(--color-accent)] px-5 py-2 font-mono text-xs font-semibold tracking-wide text-[var(--color-bg)] hover:bg-[var(--color-accent)]/90 ${className}`}
     >
       {label}
     </a>

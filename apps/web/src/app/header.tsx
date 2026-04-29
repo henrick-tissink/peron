@@ -1,16 +1,15 @@
 import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { LanguageSelector } from "../components/language-selector";
 
 export function Header() {
+  const t = useTranslations("header");
   return (
-    <header className="border-b border-[var(--color-border)]">
-      <div className="mx-auto flex max-w-3xl items-center justify-between px-4 py-3">
-        <Link href="/" className="text-base font-semibold tracking-tight">
-          Peron
-        </Link>
-        <span className="text-xs text-[var(--color-text-muted)]">
-          Train search for Romania
-        </span>
-      </div>
+    <header className="flex items-center justify-between border-b border-[var(--color-border)] px-7 py-4 text-xs">
+      <Link href="/" className="font-mono font-semibold tracking-widest uppercase">
+        PERON<span className="text-[var(--color-accent)]">/</span>RO
+      </Link>
+      <LanguageSelector />
     </header>
   );
 }

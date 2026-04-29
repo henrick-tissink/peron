@@ -2,7 +2,6 @@
 
 import type { SearchResponse } from "@peron/types";
 import { ItineraryCard } from "./itinerary-card";
-import { FareMatrix } from "./fare-matrix";
 import { ErrorState, type ErrorQuery } from "./error-state";
 
 export function ResultsList({
@@ -13,12 +12,14 @@ export function ResultsList({
   query: ErrorQuery;
 }) {
   return (
-    <div className="flex flex-col gap-3">
-      {data.warning?.kind === "partial" && <ErrorState error={data.warning} query={query} />}
+    <div>
+      {data.warning?.kind === "partial" && (
+        <div className="px-7 py-3">
+          <ErrorState error={data.warning} query={query} />
+        </div>
+      )}
       {data.itineraries.map((it) => (
-        <ItineraryCard key={it.id} itinerary={it}>
-          <FareMatrix transactionString={it.transactionString} />
-        </ItineraryCard>
+        <ItineraryCard key={it.id} itinerary={it} />
       ))}
     </div>
   );

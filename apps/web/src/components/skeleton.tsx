@@ -12,9 +12,9 @@ export function Skeleton({
   if (height !== undefined) style.height = typeof height === "number" ? `${height}px` : height;
 
   return (
-    <span
+    <div
       aria-hidden="true"
-      className={`inline-block animate-pulse rounded-[4px] bg-[var(--color-bg-muted)] ${className}`}
+      className={`animate-pulse rounded bg-[var(--color-bg-elev)] ${className}`}
       style={style}
     />
   );

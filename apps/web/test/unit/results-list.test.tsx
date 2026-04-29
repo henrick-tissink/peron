@@ -1,7 +1,21 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import type { SearchResponse } from "@peron/types";
 import { ResultsList } from "../../src/components/results-list.js";
+
+vi.mock("next-intl", () => ({
+  useTranslations: () => (k: string, params?: Record<string, unknown>) => {
+    if (k === "direct") return "DIRECT";
+    if (k === "changes") return `${params?.count} changes`;
+    if (k === "from") return "FROM";
+    if (k === "bookOnCfr") return "Book on CFR →";
+    return k;
+  },
+}));
+
+vi.mock("../../src/components/fare-matrix.js", () => ({
+  FareMatrix: () => <div data-testid="fare-matrix" />,
+}));
 
 const twoTrains: SearchResponse = {
   itineraries: [
@@ -39,9 +53,9 @@ const twoTrains: SearchResponse = {
 };
 
 describe("ResultsList", () => {
-  it("renders one card per itinerary", () => {
+  it("renders one row button per itinerary", () => {
     render(<ResultsList data={twoTrains} query={{ from: "A", to: "B", date: "2026-05-21" }} />);
-    expect(screen.getAllByRole("article")).toHaveLength(2);
+    expect(screen.getAllByRole("button")).toHaveLength(2);
   });
 
   it("shows a partial-results banner above the list when warning.kind === partial", () => {
@@ -51,7 +65,7 @@ describe("ResultsList", () => {
     };
     render(<ResultsList data={withWarning} query={{ from: "A", to: "B", date: "2026-05-21" }} />);
     expect(screen.getByText(/3 more/i)).toBeInTheDocument();
-    expect(screen.getAllByRole("article")).toHaveLength(2);
+    expect(screen.getAllByRole("button")).toHaveLength(2);
   });
 
   it("does not show a banner for non-partial warnings (they're full-page replacements)", () => {

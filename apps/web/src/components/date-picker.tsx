@@ -24,7 +24,7 @@ export function DatePicker({
       <label
         id={labelId}
         htmlFor={name}
-        className="text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]"
+        className="sr-only"
       >
         {label}
       </label>
@@ -36,7 +36,7 @@ export function DatePicker({
         min={minEffective}
         onChange={(e) => onChange(e.target.value)}
         aria-labelledby={labelId}
-        className="rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm outline-none focus:border-[var(--color-peron-blue)]"
+        className="bg-transparent text-[var(--color-text)] font-mono text-sm w-full text-left outline-none"
       />
     </div>
   );

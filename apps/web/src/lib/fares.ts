@@ -1,14 +1,14 @@
 import type { FareTypeId } from "@peron/types";
 
-export type FareTypeEntry = { id: FareTypeId; label: string; labelShort: string };
+export type FareTypeEntry = { id: FareTypeId; labelKey: string };
 
 export const FARE_TYPES: FareTypeEntry[] = [
-  { id: "73", label: "Adult",                labelShort: "Adult" },
-  { id: "71", label: "Adult + TrenPlus",     labelShort: "TrenPlus" },
-  { id: "72", label: "Copil (6–14 ani)",     labelShort: "Copil" },
-  { id: "50", label: "Elev",                 labelShort: "Elev" },
-  { id: "74", label: "Student",              labelShort: "Student" },
-  { id: "53", label: "Pensionar",            labelShort: "Pensionar" },
+  { id: "73", labelKey: "adult" },
+  { id: "71", labelKey: "adultTrenPlus" },
+  { id: "72", labelKey: "child" },
+  { id: "50", labelKey: "pupil" },
+  { id: "74", labelKey: "student" },
+  { id: "53", labelKey: "senior" },
 ];
 
 export const SERVICE_KEYS = [

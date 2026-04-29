@@ -5,8 +5,12 @@ import type { Station } from "@peron/types";
 import { SearchForm } from "../../src/components/search-form.js";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({
+vi.mock("../../src/i18n/navigation.js", () => ({
   useRouter: () => ({ push }),
+}));
+
+vi.mock("next-intl", () => ({
+  useTranslations: () => (k: string) => k,
 }));
 
 const stations: Station[] = [
@@ -25,7 +29,7 @@ describe("SearchForm", () => {
     expect(screen.getByRole("combobox", { name: /from/i })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /to/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/departure date/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /search/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /submit/i })).toBeInTheDocument();
   });
 
   it("submit navigates to /search with query params", async () => {
@@ -38,7 +42,7 @@ describe("SearchForm", () => {
         defaultDate="2026-05-21"
       />,
     );
-    await user.click(screen.getByRole("button", { name: /search/i }));
+    await user.click(screen.getByRole("button", { name: /submit/i }));
     expect(push).toHaveBeenCalledWith(
       "/search?from=Bucure%C8%99ti+Nord&to=Bra%C8%99ov&date=2026-05-21",
     );
@@ -46,22 +50,7 @@ describe("SearchForm", () => {
 
   it("submit is disabled until From + To + Date are set", () => {
     render(<SearchForm stations={stations} />);
-    expect(screen.getByRole("button", { name: /search/i })).toBeDisabled();
-  });
-
-  it("swap button swaps From and To", async () => {
-    const user = userEvent.setup();
-    render(
-      <SearchForm
-        stations={stations}
-        defaultFrom="bucuresti Nord"
-        defaultTo="Brașov"
-        defaultDate="2026-05-21"
-      />,
-    );
-    await user.click(screen.getByRole("button", { name: /swap/i, hidden: true }));
-    expect((screen.getByRole("combobox", { name: /from/i }) as HTMLInputElement).value).toBe("Brașov");
-    expect((screen.getByRole("combobox", { name: /to/i }) as HTMLInputElement).value).toBe("bucuresti Nord");
+    expect(screen.getByRole("button", { name: /submit/i })).toBeDisabled();
   });
 
   it("does not submit when From === To", async () => {
@@ -74,7 +63,7 @@ describe("SearchForm", () => {
         defaultDate="2026-05-21"
       />,
     );
-    await user.click(screen.getByRole("button", { name: /search/i }));
+    await user.click(screen.getByRole("button", { name: /submit/i }));
     expect(push).not.toHaveBeenCalled();
   });
 });

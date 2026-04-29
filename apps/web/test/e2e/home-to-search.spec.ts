@@ -15,7 +15,7 @@ test("home → search renders at least one result card", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/search\?from=.+&to=.+&date=/);
 
-  const card = page.getByRole("article").first();
+  const card = page.locator("button").filter({ hasText: /\d{2}:\d{2}/ }).first();
   await expect(card).toBeVisible();
   await expect(card.getByText("08:30")).toBeVisible();
   await expect(card.getByText(/41[,.]5/)).toBeVisible();

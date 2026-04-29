@@ -1,0 +1,84 @@
+{
+  "header": {
+    "brand": "PERON/RO"
+  },
+  "footer": {
+    "site": "PERON · GARALAGARA.COM",
+    "tagline": "Built for CFR Călători"
+  },
+  "home": {
+    "heroTitle": "Find a train.",
+    "heroSubtitle": "CFR Călători · live data · book direct",
+    "popularLabel": "POPULAR",
+    "tickerLabel": "LIVE · BUCUREȘTI NORD · NEXT DEPARTURES"
+  },
+  "searchForm": {
+    "fromLabel": "FROM",
+    "fromPlaceholder": "Departure station",
+    "toLabel": "TO",
+    "toPlaceholder": "Arrival station",
+    "dateLabel": "DATE",
+    "submit": "Search",
+    "swap": "Swap stations"
+  },
+  "results": {
+    "metaLabel": "SEARCH RESULTS",
+    "stats": "{count, plural, one {# itinerary} other {# itineraries}} · {latencyMs}ms",
+    "direct": "DIRECT",
+    "changes": "{count, plural, one {# change} other {# changes}}",
+    "details": "Details",
+    "hide": "Hide",
+    "from": "FROM",
+    "noResults": "No itineraries found.",
+    "warningCaptcha": "CFR is showing a captcha. Try again in a minute.",
+    "warningUnavailable": "CFR is unreachable right now.",
+    "warningOurBug": "Something broke on our side. Error ID: {errorId}"
+  },
+  "fareMatrix": {
+    "fareType": "FARE TYPE",
+    "class1": "CLASS 1",
+    "class2": "CLASS 2",
+    "loading": "…",
+    "unavailable": "—",
+    "bookOnCfr": "Book on CFR →"
+  },
+  "fares": {
+    "adult": "Adult",
+    "adultTrenPlus": "Adult + TrenPlus",
+    "child": "Child (6–14)",
+    "pupil": "Pupil",
+    "student": "Student",
+    "senior": "Senior"
+  },
+  "stationBoard": {
+    "metaDepartures": "NEXT DEPARTURES",
+    "metaArrivals": "NEXT ARRIVALS",
+    "tabDepartures": "DEPARTURES",
+    "tabArrivals": "ARRIVALS",
+    "headTime": "TIME",
+    "headDestination": "DESTINATION",
+    "headOrigin": "ORIGIN",
+    "headTrain": "TRAIN",
+    "headDuration": "DURATION",
+    "via": "via {stops}",
+    "direct": "direct",
+    "updatedLabel": "UPDATED",
+    "annotation": "SCHEDULED · AGGREGATED FROM CFR · REFRESH EVERY 60s",
+    "backToSearch": "← BACK TO SEARCH",
+    "noEntries": "No upcoming departures."
+  },
+  "errors": {
+    "title404": "Page not found",
+    "code404": "ERR_NOT_FOUND",
+    "back": "← BACK TO HOME",
+    "title500": "Something went wrong",
+    "code500": "ERR_INTERNAL",
+    "retry": "Try again"
+  },
+  "language": {
+    "selectorLabel": "Language",
+    "en": "English",
+    "ro": "Română",
+    "de": "Deutsch"
+  }
+}

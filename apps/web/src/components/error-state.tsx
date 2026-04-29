@@ -1,4 +1,5 @@
 import type { SearchError } from "@peron/types";
+import { useTranslations } from "next-intl";
 import { CfrLink } from "./cfr-link";
 
 export type ErrorQuery = { from: string; to: string; date: string };
@@ -15,16 +16,16 @@ export function ErrorState({
   error: SearchError;
   query: ErrorQuery;
 }) {
+  const t = useTranslations("results");
   const cfrUrl = cfrSearchUrl(query);
 
   switch (error.kind) {
     case "no-results":
       return (
-        <section className="rounded-[var(--radius-card)] border border-[var(--color-border)] p-6 text-center">
-          <p className="text-base">
-            No trains between <strong>{query.from}</strong> and <strong>{query.to}</strong> on {query.date}.
-          </p>
-          <div className="mt-4 flex justify-center">
+        <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
+          <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_NO_RESULTS</span>
+          <p>{t("noResults")}</p>
+          <div className="mt-2 flex justify-center">
             <CfrLink href={cfrUrl} label="View on CFR ↗" />
           </div>
         </section>
@@ -32,14 +33,13 @@ export function ErrorState({
 
     case "captcha":
       return (
-        <section className="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-peron-blue-soft)] p-6 text-center">
-          <p className="text-base">
-            CFR is temporarily blocking automated searches.
-          </p>
-          <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+        <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
+          <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_CAPTCHA</span>
+          <p>{t("warningCaptcha")}</p>
+          <p className="text-[var(--color-text-subtle)]">
             Try again in {error.retryAfterSec}s, or search directly on CFR.
           </p>
-          <div className="mt-4 flex justify-center">
+          <div className="mt-2 flex justify-center">
             <CfrLink href={cfrUrl} label="View on CFR ↗" />
           </div>
         </section>
@@ -48,7 +48,7 @@ export function ErrorState({
     case "partial": {
       const missing = error.detectedCount - error.parsedCount;
       return (
-        <section className="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-bg-muted)] p-4 text-sm">
+        <section className="flex flex-col items-center gap-3 py-6 font-mono text-sm text-[var(--color-text-muted)]">
           <p>
             {missing} more trains found — <CfrLink href={cfrUrl} label="view all on CFR ↗" />
           </p>
@@ -58,12 +58,11 @@ export function ErrorState({
 
     case "parser-failure":
       return (
-        <section className="rounded-[var(--radius-card)] border border-[var(--color-border)] p-6 text-center">
-          <p className="text-base">
-            Something on CFR's side changed and we can't read the response right now.
-          </p>
-          <p className="mt-2 text-sm text-[var(--color-text-muted)]">We've been notified.</p>
-          <div className="mt-4 flex justify-center">
+        <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
+          <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_PARSER</span>
+          <p>Something on CFR's side changed and we can't read the response right now.</p>
+          <p className="text-[var(--color-text-subtle)]">We've been notified.</p>
+          <div className="mt-2 flex justify-center">
             <CfrLink href={cfrUrl} label="Search on CFR ↗" />
           </div>
         </section>
@@ -71,9 +70,10 @@ export function ErrorState({
 
     case "cfr-unavailable":
       return (
-        <section className="rounded-[var(--radius-card)] border border-[var(--color-border)] p-6 text-center">
-          <p className="text-base">CFR's booking system seems to be down.</p>
-          <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+        <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
+          <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_UNAVAILABLE</span>
+          <p>{t("warningUnavailable")}</p>
+          <p className="text-[var(--color-text-subtle)]">
             HTTP {error.httpStatus} — check @CFRCalatori on Twitter for updates.
           </p>
         </section>
@@ -81,11 +81,9 @@ export function ErrorState({
 
     case "our-bug":
       return (
-        <section className="rounded-[var(--radius-card)] border border-[var(--color-border)] p-6 text-center">
-          <p className="text-base">Something broke on our side.</p>
-          <p className="mt-2 font-mono text-xs text-[var(--color-text-muted)]">
-            Error ID: {error.errorId}
-          </p>
+        <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
+          <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_INTERNAL</span>
+          <p>{t("warningOurBug", { errorId: error.errorId })}</p>
         </section>
       );
   }

@@ -1,32 +1,29 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
-import { Header } from "./header";
-import { Footer } from "./footer";
+import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
 
-const inter = Inter({
+const display = Space_Grotesk({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "700"],
+  variable: "--font-mono",
   display: "swap",
 });
 
 export const metadata = {
   title: "Peron — train search for Romania",
-  description:
-    "A cleaner, faster, mobile-friendly frontend for Romania's national rail network.",
+  description: "A cleaner, faster, mobile-friendly frontend for Romania's national rail network.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ro" className={inter.variable}>
-      <body className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
+    <html className={`${display.variable} ${mono.variable}`}>
+      <body className="flex min-h-screen flex-col">{children}</body>
     </html>
   );
 }

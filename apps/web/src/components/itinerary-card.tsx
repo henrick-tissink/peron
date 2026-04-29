@@ -1,90 +1,78 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
+import { useTranslations } from "next-intl";
 import type { Itinerary } from "@peron/types";
-import { Bike, UtensilsCrossed, Moon, Bed } from "lucide-react";
-import { CfrLink } from "./cfr-link";
+import { FareMatrix } from "./fare-matrix";
 
-function transferLabel(n: number): string {
-  if (n === 0) return "Direct";
-  return `${n} transfer${n === 1 ? "" : "s"}`;
-}
-
-function formatDuration(d: { hours: number; minutes: number }): string {
-  if (d.hours === 0) return `${d.minutes}m`;
-  if (d.minutes === 0) return `${d.hours}h`;
-  return `${d.hours}h ${d.minutes}m`;
-}
-
-function formatPrice(p: Itinerary["priceFrom"]): string {
-  if (!p) return "—";
-  const cleaned = Number.isInteger(p.amount) ? `${p.amount}` : p.amount.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
-  return `${cleaned.replace(".", ",")} lei`;
-}
-
-export function ItineraryCard({
-  itinerary,
-  children,
-}: {
-  itinerary: Itinerary;
-  children?: ReactNode;
-}) {
+export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
   const [expanded, setExpanded] = useState(false);
-  const firstSeg = itinerary.segments[0]!;
+  const t = useTranslations("results");
+  const tFare = useTranslations("fareMatrix");
+  const hours = itinerary.duration.hours;
+  const minutes = itinerary.duration.minutes;
 
   return (
-    <article className="rounded-[var(--radius-card)] border border-[var(--color-border)] bg-[var(--color-bg)] p-4">
-      <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-        <div className="flex flex-col items-end">
-          <span className="num-time text-base">{itinerary.departure.time}</span>
-          <span className="text-xs text-[var(--color-text-muted)]">{itinerary.departure.station}</span>
+    <>
+      <button
+        type="button"
+        onClick={() => setExpanded((v) => !v)}
+        className={`grid w-full grid-cols-[90px_1fr_60px_24px] sm:grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
+      >
+        <div className="font-mono text-base">
+          <span className="text-[var(--color-accent)]">{itinerary.departure.time}</span>
+          <span className="mx-1 text-[var(--color-text-subtle)]">→</span>
+          <span className="text-[var(--color-text)]">{itinerary.arrival.time}</span>
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-xs text-[var(--color-text-muted)]">{formatDuration(itinerary.duration)}</span>
-          <span className="h-px w-24 bg-[var(--color-border)]" aria-hidden="true" />
-          <span className="text-xs text-[var(--color-text-muted)]">{transferLabel(itinerary.transferCount)}</span>
+        <div>
+          <div className="font-mono text-sm">
+            {itinerary.segments.map((s, i) => (
+              <span key={i}>
+                {i > 0 && <span className="mx-2 text-[var(--color-text-subtle)]">+</span>}
+                <span className="text-[var(--color-accent)]">{s.trainCategory}</span>
+                <span className="text-[var(--color-text)]"> {s.trainNumber}</span>
+              </span>
+            ))}
+          </div>
+          <div className="mt-1 font-mono text-[11px] text-[var(--color-text-subtle)]">
+            {itinerary.departure.station} — {itinerary.arrival.station}
+          </div>
         </div>
-        <div className="flex flex-col items-start">
-          <span className="num-time text-base">{itinerary.arrival.time}</span>
-          <span className="text-xs text-[var(--color-text-muted)]">{itinerary.arrival.station}</span>
+        <div className="text-right font-mono text-sm text-[var(--color-text-muted)] hidden sm:block">
+          {hours}h {String(minutes).padStart(2, "0")}m
         </div>
-      </div>
-
-      <div className="mt-3 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 text-xs text-[var(--color-text-muted)]">
-          <span>
-            {firstSeg.trainCategory} {firstSeg.trainNumber}
-          </span>
-          <ServiceIcons services={itinerary.services} />
+        <div className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-ok)] hidden sm:block">
+          {itinerary.transferCount === 0 ? t("direct") : t("changes", { count: itinerary.transferCount })}
         </div>
-        <div className="flex items-center gap-3">
-          <span data-testid="price-from" className="num-time text-sm">
-            {formatPrice(itinerary.priceFrom)}
-          </span>
-          <button
-            type="button"
-            onClick={() => setExpanded((v) => !v)}
-            aria-expanded={expanded}
-            className="rounded-[var(--radius-control)] border border-[var(--color-border)] px-3 py-1 text-xs hover:border-[var(--color-peron-blue)] hover:text-[var(--color-peron-blue)]"
-          >
-            {expanded ? "Hide" : "Details"}
-          </button>
-          <CfrLink href={itinerary.bookingUrl} label="Book on CFR ↗" />
+        <div className="text-right font-mono text-sm">
+          {itinerary.priceFrom ? (
+            <>
+              <span className="text-[var(--color-text)]">{itinerary.priceFrom.amount}</span>
+              <span className="ml-1 text-[var(--color-text-subtle)] text-[11px]">{itinerary.priceFrom.currency}</span>
+            </>
+          ) : (
+            <span className="font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">{t("from")}</span>
+          )}
         </div>
-      </div>
-
-      {expanded && <div className="mt-4 border-t border-[var(--color-border)] pt-4">{children}</div>}
-    </article>
-  );
-}
-
-function ServiceIcons({ services }: { services: Itinerary["services"] }) {
-  return (
-    <span className="flex items-center gap-2">
-      {services.bikeCar && <Bike size={14} aria-label="bike car" />}
-      {services.barRestaurant && <UtensilsCrossed size={14} aria-label="bar / restaurant" />}
-      {services.sleeper && <Bed size={14} aria-label="sleeper car" />}
-      {services.couchette && <Moon size={14} aria-label="couchette" />}
-    </span>
+        <div className={`text-right text-base ${expanded ? "text-[var(--color-accent)]" : "text-[var(--color-text-subtle)]"}`}>
+          {expanded ? "⌄" : "›"}
+        </div>
+      </button>
+      {expanded && (
+        <div className="border-b border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-7 py-4">
+          <FareMatrix transactionString={itinerary.transactionString} />
+          <div className="mt-3 flex justify-end">
+            <a
+              href={itinerary.bookingUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="bg-[var(--color-accent)] px-5 py-2 font-mono text-xs font-semibold tracking-wide text-[var(--color-bg)] hover:bg-[var(--color-accent)]/90"
+            >
+              {tFare("bookOnCfr")}
+            </a>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
