@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import type { Station } from "@peron/types";
-import { ArrowLeftRight } from "lucide-react";
 import { StationAutocomplete } from "./station-autocomplete";
 import { DatePicker, defaultDatePickerValue } from "./date-picker";
 
@@ -19,6 +19,7 @@ export function SearchForm({
   defaultDate?: string;
 }) {
   const router = useRouter();
+  const t = useTranslations("searchForm");
   const [from, setFrom] = useState(defaultFrom);
   const [to, setTo] = useState(defaultTo);
   const [date, setDate] = useState(defaultDate ?? defaultDatePickerValue());
@@ -35,45 +36,47 @@ export function SearchForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_1fr_auto_auto]"
+      className="grid max-w-2xl mx-auto grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-px overflow-hidden rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-border-strong)]"
     >
-      <StationAutocomplete
-        name="from"
-        label="From"
-        stations={stations}
-        value={from}
-        onChange={setFrom}
-        placeholder="Departure station"
-      />
-      <button
-        type="button"
-        aria-label="swap"
-        onClick={() => {
-          const newFrom = to;
-          const newTo = from;
-          setFrom(newFrom);
-          setTo(newTo);
-        }}
-        className="hidden self-end rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)] p-2 text-[var(--color-text-muted)] hover:border-[var(--color-peron-blue)] hover:text-[var(--color-peron-blue)] md:block"
-      >
-        <ArrowLeftRight size={16} aria-hidden="true" />
-      </button>
-      <StationAutocomplete
-        name="to"
-        label="To"
-        stations={stations}
-        value={to}
-        onChange={setTo}
-        placeholder="Arrival station"
-      />
-      <DatePicker name="date" value={date} onChange={setDate} />
+      <SegField label={t("fromLabel")}>
+        <StationAutocomplete
+          name="from"
+          label={t("fromLabel")}
+          stations={stations}
+          value={from}
+          onChange={setFrom}
+          placeholder={t("fromPlaceholder")}
+        />
+      </SegField>
+      <SegField label={t("toLabel")}>
+        <StationAutocomplete
+          name="to"
+          label={t("toLabel")}
+          stations={stations}
+          value={to}
+          onChange={setTo}
+          placeholder={t("toPlaceholder")}
+        />
+      </SegField>
+      <SegField label={t("dateLabel")}>
+        <DatePicker name="date" value={date} onChange={setDate} />
+      </SegField>
       <button
         type="submit"
-        disabled={!canSubmit}
-        className="self-end rounded-[var(--radius-control)] bg-[var(--color-peron-blue)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--color-peron-blue-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+        aria-label={t("submit")}
+        className="bg-[var(--color-accent)] px-8 font-mono font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)]/90"
       >
-        Search
+        →
       </button>
     </form>
+  );
+}
+
+function SegField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="bg-[var(--color-bg-elev)] px-4 py-3">
+      <div className="font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">{label}</div>
+      <div className="mt-1 font-mono text-sm text-[var(--color-text)]">{children}</div>
+    </div>
   );
 }
