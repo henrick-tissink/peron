@@ -42,7 +42,7 @@ export function searchRoute() {
     const start = Date.now();
 
     try {
-      const result = await deps.pool.withSession(async (session) => {
+      const result = await deps.pool.withSession(parsed.data.from, parsed.data.to, async (session) => {
         const creds = (session as unknown as { creds_: {
           cookie: string;
           confirmationKey: string;

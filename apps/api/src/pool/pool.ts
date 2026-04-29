@@ -5,29 +5,16 @@ import { CaptchaError, UpstreamError } from "../cfr/errors.js";
 
 export type PoolConfig = {
   maxSize: number;
-  warmFrom?: string;
-  warmTo?: string;
-  staleAfterMs?: number;
   breaker?: BreakerConfig;
 };
 
-const DEFAULT_WARM_FROM = "Bucuresti-Nord";
-const DEFAULT_WARM_TO = "Brasov";
-const DEFAULT_STALE_MS = 15 * 60 * 1000; // 15 minutes
-
 export class SessionPool {
   readonly maxSize: number;
-  private readonly warmFrom: string;
-  private readonly warmTo: string;
-  private readonly staleAfterMs: number;
   private readonly sessions = new Map<string, Session>();
   private readonly breaker: CircuitBreaker;
 
   constructor(cfg: PoolConfig) {
     this.maxSize = cfg.maxSize;
-    this.warmFrom = cfg.warmFrom ?? DEFAULT_WARM_FROM;
-    this.warmTo = cfg.warmTo ?? DEFAULT_WARM_TO;
-    this.staleAfterMs = cfg.staleAfterMs ?? DEFAULT_STALE_MS;
     this.breaker = new CircuitBreaker(
       cfg.breaker ?? { threshold: 3, windowMs: 60_000, cooldownMs: 120_000 },
     );
@@ -41,24 +28,32 @@ export class SessionPool {
     return this.sessions.get(id);
   }
 
-  private async spawn(): Promise<Session> {
+  private async spawn(from: string, to: string): Promise<Session> {
     const s = new Session(nanoid(10));
-    await s.warm(this.warmFrom, this.warmTo);
+    await s.warm(from, to);
     this.sessions.set(s.id, s);
     return s;
   }
 
-  private evict(id: string): void {
-    this.sessions.delete(id);
+  private evictOldestIdle(): void {
+    let oldest: Session | undefined;
+    for (const s of this.sessions.values()) {
+      if (s.state === "busy") continue;
+      if (!oldest || s.lastWarmedAt < oldest.lastWarmedAt) oldest = s;
+    }
+    if (oldest) this.sessions.delete(oldest.id);
   }
 
-  /**
-   * Acquire a session, run fn, release.
-   * - If an idle fresh session has a free queue → use it.
-   * - Else if pool not full → spawn a new session.
-   * - Else → pick the least-busy existing session (shortest queue) and enqueue.
-   */
-  async withSession<T>(fn: (s: Session) => Promise<T>): Promise<T> {
+  // CFR's GetItineraries binds the ConfirmationKey scraped from
+  // /ro-RO/Rute-trenuri/{from}/{to} to that exact pair; reusing a session
+  // across different routes returns 400. So we always bootstrap a fresh
+  // session against the user's pair. The session lingers in the pool so
+  // the follow-up Price call can find it via withPinnedSession.
+  async withSession<T>(
+    from: string,
+    to: string,
+    fn: (s: Session) => Promise<T>,
+  ): Promise<T> {
     const now = Date.now();
     if (this.breaker.isOpen(now)) {
       throw new CaptchaError(
@@ -66,32 +61,21 @@ export class SessionPool {
       );
     }
 
-    const alive = [...this.sessions.values()].filter((s) => s.state !== "dead");
-
-    let session: Session | undefined = alive.find((s) => s.state === "fresh");
-
-    if (!session && this.sessions.size < this.maxSize) {
-      session = await this.spawn();
+    if (this.sessions.size >= this.maxSize) {
+      this.evictOldestIdle();
     }
-
-    if (!session) {
-      session = alive[0]!;
-    }
-
-    if (session.isStale(Date.now(), this.staleAfterMs)) {
-      await session.refresh(this.warmFrom, this.warmTo);
-    }
+    const session = await this.spawn(from, to);
 
     try {
-      return await session.run(() => fn(session!));
+      return await session.run(() => fn(session));
     } catch (err) {
       if (err instanceof CaptchaError) {
         session.kill("captcha");
-        this.evict(session.id);
+        this.sessions.delete(session.id);
         this.breaker.record(Date.now());
       } else if (err instanceof Error && err.name === "UpstreamError") {
         session.kill("upstream");
-        this.evict(session.id);
+        this.sessions.delete(session.id);
       }
       throw err;
     }
@@ -116,11 +100,11 @@ export class SessionPool {
     } catch (err) {
       if (err instanceof CaptchaError) {
         session.kill("captcha");
-        this.evict(session.id);
+        this.sessions.delete(session.id);
         this.breaker.record(Date.now());
       } else if (err instanceof Error && err.name === "UpstreamError") {
         session.kill("upstream");
-        this.evict(session.id);
+        this.sessions.delete(session.id);
       }
       throw err;
     }
