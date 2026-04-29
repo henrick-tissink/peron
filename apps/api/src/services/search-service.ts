@@ -19,7 +19,7 @@ export type SearchResult = {
  * silently returns []).
  */
 export async function searchItineraries(deps: AppDeps, params: SearchInput): Promise<SearchResult> {
-  const result = await deps.pool.withSession(async (session) => {
+  const result = await deps.pool.withSession(params.from, params.to, async (session) => {
     const creds = session.creds_;
     const html = await searchRaw(creds, params);
     return { html, sessionId: session.id };
