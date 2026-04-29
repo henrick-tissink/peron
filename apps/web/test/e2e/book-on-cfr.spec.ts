@@ -5,9 +5,12 @@ test("'Book on CFR' link points to the itinerary's bookingUrl and opens in a new
 }) => {
   await page.goto("/search?from=Bucuresti+Nord&to=Brasov&date=2026-05-21");
 
-  const card = page.getByRole("article").first();
-  const cfrLink = card.getByRole("link", { name: /Book on CFR/i });
-  await expect(cfrLink).toBeVisible();
+  const card = page.locator("button").filter({ hasText: /\d{2}:\d{2}/ }).first();
+  await expect(card).toBeVisible();
+  await card.click();
+
+  const cfrLink = page.getByRole("link", { name: /Book on CFR/i }).first();
+  await expect(cfrLink).toBeVisible({ timeout: 10_000 });
   await expect(cfrLink).toHaveAttribute("target", "_blank");
   await expect(cfrLink).toHaveAttribute(
     "href",
