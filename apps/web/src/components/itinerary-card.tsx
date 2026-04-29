@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import type { Itinerary } from "@peron/types";
 import { FareMatrix } from "./fare-matrix";
+import { SplitFlap } from "./split-flap";
 
 export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
   const [expanded, setExpanded] = useState(false);
@@ -19,10 +20,10 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
         onClick={() => setExpanded((v) => !v)}
         className={`grid w-full grid-cols-[110px_minmax(0,1fr)_60px_24px] sm:grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
       >
-        <div className="font-mono text-base">
-          <span className="text-[var(--color-accent)]">{itinerary.departure.time}</span>
-          <span className="mx-1 text-[var(--color-text-subtle)]">→</span>
-          <span className="text-[var(--color-text)]">{itinerary.arrival.time}</span>
+        <div className="font-mono text-base flex items-baseline gap-1">
+          <SplitFlap value={itinerary.departure.time} className="text-[var(--color-accent)]" />
+          <span className="text-[var(--color-text-subtle)]">→</span>
+          <SplitFlap value={itinerary.arrival.time} className="text-[var(--color-text)]" />
         </div>
         <div className="min-w-0">
           <div className="font-mono text-sm truncate">

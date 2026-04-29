@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { BoardResponse } from "@peron/types";
 import { fetchBoard } from "../lib/api-board";
+import { SplitFlap } from "./split-flap";
 
 export function LiveTicker() {
   const t = useTranslations("home");
@@ -34,9 +35,12 @@ export function LiveTicker() {
       ) : (
         top3.map((e, i) => (
           <div key={i} className="grid grid-cols-[80px_1fr_100px] gap-4 py-1 font-mono text-[13px]">
-            <span className="text-[var(--color-accent)]">{e.time}</span>
-            <span>→ {e.counterpart.name}</span>
-            <span className="text-[var(--color-text-muted)]">{e.train.category}-{e.train.number}</span>
+            <SplitFlap value={e.time} className="text-[var(--color-accent)]" />
+            <span className="flex items-baseline gap-2">
+              <span className="text-[var(--color-text-subtle)]">→</span>
+              <SplitFlap value={e.counterpart.name} className="text-[var(--color-text)]" />
+            </span>
+            <SplitFlap value={`${e.train.category}-${e.train.number}`} className="text-[var(--color-text-muted)] text-right" />
           </div>
         ))
       )}

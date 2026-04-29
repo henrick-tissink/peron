@@ -40,8 +40,9 @@ const direct: Itinerary = {
 describe("ItineraryCard", () => {
   it("renders departure + arrival + duration + train", () => {
     render(<ItineraryCard itinerary={direct} />);
-    expect(screen.getByText("08:30")).toBeInTheDocument();
-    expect(screen.getByText("11:00")).toBeInTheDocument();
+    // departure + arrival times are now in SplitFlap aria-labels
+    expect(screen.getByLabelText("08:30")).toBeInTheDocument();
+    expect(screen.getByLabelText("11:00")).toBeInTheDocument();
     expect(screen.getByText(/București Nord/)).toBeInTheDocument();
     expect(screen.getByText(/Brașov/)).toBeInTheDocument();
     expect(screen.getByText(/2h 30m/)).toBeInTheDocument();
