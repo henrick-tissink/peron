@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { fetchStations } from "../../lib/api";
 import { SearchForm } from "../../components/search-form";
 import { LiveTicker } from "../../components/live-ticker";
+import { Link } from "../../i18n/navigation";
 
 async function loadStations(): Promise<Station[]> {
   try {
@@ -49,11 +50,11 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
 function PopularChip({ from, to, label }: { from: string; to: string; label: string }) {
   const params = new URLSearchParams({ from, to, date: new Date(Date.now() + 86400_000).toISOString().slice(0, 10) });
   return (
-    <a
+    <Link
       href={`/search?${params.toString()}`}
       className="mx-1.5 border-b border-dashed border-[var(--color-accent)]/40 text-[var(--color-accent)] hover:border-[var(--color-accent)]"
     >
       {label}
-    </a>
+    </Link>
   );
 }

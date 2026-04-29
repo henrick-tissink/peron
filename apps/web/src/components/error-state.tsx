@@ -1,4 +1,5 @@
 import type { SearchError } from "@peron/types";
+import { useTranslations } from "next-intl";
 import { CfrLink } from "./cfr-link";
 
 export type ErrorQuery = { from: string; to: string; date: string };
@@ -15,6 +16,7 @@ export function ErrorState({
   error: SearchError;
   query: ErrorQuery;
 }) {
+  const t = useTranslations("results");
   const cfrUrl = cfrSearchUrl(query);
 
   switch (error.kind) {
@@ -22,9 +24,7 @@ export function ErrorState({
       return (
         <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
           <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_NO_RESULTS</span>
-          <p>
-            No trains between <strong>{query.from}</strong> and <strong>{query.to}</strong> on {query.date}.
-          </p>
+          <p>{t("noResults")}</p>
           <div className="mt-2 flex justify-center">
             <CfrLink href={cfrUrl} label="View on CFR ↗" />
           </div>
@@ -35,7 +35,7 @@ export function ErrorState({
       return (
         <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
           <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_CAPTCHA</span>
-          <p>CFR is temporarily blocking automated searches.</p>
+          <p>{t("warningCaptcha")}</p>
           <p className="text-[var(--color-text-subtle)]">
             Try again in {error.retryAfterSec}s, or search directly on CFR.
           </p>
@@ -72,7 +72,7 @@ export function ErrorState({
       return (
         <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
           <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_UNAVAILABLE</span>
-          <p>CFR's booking system seems to be down.</p>
+          <p>{t("warningUnavailable")}</p>
           <p className="text-[var(--color-text-subtle)]">
             HTTP {error.httpStatus} — check @CFRCalatori on Twitter for updates.
           </p>
@@ -83,10 +83,7 @@ export function ErrorState({
       return (
         <section className="flex flex-col items-center gap-3 py-12 font-mono text-sm text-[var(--color-text-muted)]">
           <span className="text-[10px] tracking-widest text-[var(--color-err)] uppercase">ERR_INTERNAL</span>
-          <p>Something broke on our side.</p>
-          <p className="text-[10px] tracking-widest text-[var(--color-text-subtle)]">
-            Error ID: {error.errorId}
-          </p>
+          <p>{t("warningOurBug", { errorId: error.errorId })}</p>
         </section>
       );
   }

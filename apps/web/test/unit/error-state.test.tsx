@@ -1,17 +1,21 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ErrorState } from "../../src/components/error-state.js";
 
+vi.mock("next-intl", () => ({
+  useTranslations: () => (k: string, vars?: Record<string, unknown>) =>
+    vars ? `${k}:${JSON.stringify(vars)}` : k,
+}));
+
 describe("ErrorState variants", () => {
-  it("renders no-results with a nearby-dates hint", () => {
+  it("renders no-results with translation key", () => {
     render(
       <ErrorState
         error={{ kind: "no-results" }}
         query={{ from: "București Nord", to: "Brașov", date: "2026-05-21" }}
       />,
     );
-    expect(screen.getByText(/No trains between/i)).toBeInTheDocument();
-    expect(screen.getByText(/București Nord/)).toBeInTheDocument();
+    expect(screen.getByText("noResults")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /View on CFR/i })).toBeInTheDocument();
   });
 
@@ -23,7 +27,7 @@ describe("ErrorState variants", () => {
       />,
     );
     expect(screen.getByText(/60s/)).toBeInTheDocument();
-    expect(screen.getByText(/automated searches/i)).toBeInTheDocument();
+    expect(screen.getByText("warningCaptcha")).toBeInTheDocument();
   });
 
   it("partial shows '{M} more trains found' with a view-on-CFR affordance", () => {
@@ -46,14 +50,14 @@ describe("ErrorState variants", () => {
     expect(screen.getByText(/CFR's side changed/i)).toBeInTheDocument();
   });
 
-  it("cfr-unavailable tells the user CFR seems down", () => {
+  it("cfr-unavailable shows warningUnavailable key", () => {
     render(
       <ErrorState
         error={{ kind: "cfr-unavailable", httpStatus: 503 }}
         query={{ from: "A", to: "B", date: "2026-05-21" }}
       />,
     );
-    expect(screen.getByText(/CFR's booking system seems to be down/i)).toBeInTheDocument();
+    expect(screen.getByText("warningUnavailable")).toBeInTheDocument();
   });
 
   it("our-bug shows errorId for support", () => {
@@ -66,13 +70,13 @@ describe("ErrorState variants", () => {
     expect(screen.getByText(/abc-123/)).toBeInTheDocument();
   });
 
-  it("captcha variant with 0 retryAfterSec still renders fallback", () => {
+  it("captcha variant with 0 retryAfterSec still renders warningCaptcha key", () => {
     render(
       <ErrorState
         error={{ kind: "captcha", retryAfterSec: 0 }}
         query={{ from: "A", to: "B", date: "2026-05-21" }}
       />,
     );
-    expect(screen.getByText(/automated searches/i)).toBeInTheDocument();
+    expect(screen.getByText("warningCaptcha")).toBeInTheDocument();
   });
 });

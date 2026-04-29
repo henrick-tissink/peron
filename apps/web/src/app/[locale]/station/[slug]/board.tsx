@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "../../../../i18n/navigation";
 import { useEffect, useState } from "react";
 import type { BoardResponse, BoardDirection } from "@peron/types";
 import { fetchBoard } from "../../../../lib/api-board";

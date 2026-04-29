@@ -5,7 +5,7 @@ import type { Station } from "@peron/types";
 import { SearchForm } from "../../src/components/search-form.js";
 
 const push = vi.fn();
-vi.mock("next/navigation", () => ({
+vi.mock("../../src/i18n/navigation.js", () => ({
   useRouter: () => ({ push }),
 }));
 
