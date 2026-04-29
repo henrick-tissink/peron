@@ -23,6 +23,7 @@
   --radius-control: 6px;
 
   /* Fonts (variables set in layout.tsx via next/font) */
+  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
