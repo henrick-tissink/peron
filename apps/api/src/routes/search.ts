@@ -4,8 +4,7 @@ import { z } from "zod";
 import type { SearchResponse } from "@peron/types";
 import type { AppEnv } from "../app.js";
 import { searchRateLimit } from "../middleware/rate-limit.js";
-import { searchRaw } from "../cfr/client.js";
-import { parseItineraries } from "../parser/itinerary.js";
+import { searchItineraries } from "../services/search-service.js";
 import { CaptchaError, UpstreamError } from "../cfr/errors.js";
 
 const SearchBodySchema = z.object({
@@ -29,10 +28,7 @@ export function searchRoute() {
       return c.json(
         {
           itineraries: [],
-          warning: {
-            kind: "our-bug" as const,
-            errorId: "invalid-request",
-          },
+          warning: { kind: "our-bug" as const, errorId: "invalid-request" },
           meta: { parseSuccessRate: 0, latencyMs: 0 },
         } satisfies SearchResponse,
         400,
@@ -42,32 +38,16 @@ export function searchRoute() {
     const start = Date.now();
 
     try {
-      const result = await deps.pool.withSession(async (session) => {
-        const creds = (session as unknown as { creds_: {
-          cookie: string;
-          confirmationKey: string;
-          requestVerificationToken: string;
-        } }).creds_;
-        const html = await searchRaw(creds, parsed.data);
-        return { html, sessionId: session.id };
-      });
-
-      const parseResult = parseItineraries(result.html, result.sessionId);
-
-      const txs = parseResult.itineraries.map((it) => it.transactionString).filter(Boolean);
-      deps.pins.setMany(result.sessionId, txs);
-
+      const result = await searchItineraries(deps, parsed.data);
       log.info({
         msg: "search.ok",
-        detectedCount: parseResult.meta.detectedCount,
-        parseSuccessRate: parseResult.meta.parseSuccessRate,
+        parseSuccessRate: result.parseSuccessRate,
       });
-
       const response: SearchResponse = {
-        itineraries: parseResult.itineraries,
-        warning: parseResult.warning,
+        itineraries: result.itineraries,
+        warning: result.warning,
         meta: {
-          parseSuccessRate: parseResult.meta.parseSuccessRate,
+          parseSuccessRate: result.parseSuccessRate,
           latencyMs: Date.now() - start,
         },
       };
