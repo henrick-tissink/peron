@@ -1,4 +1,4 @@
-import type { Station, SearchResponse, PriceResponse } from "@peron/types";
+import type { Station, SearchResponse, PriceResponse, BoardResponse } from "@peron/types";
 
 export const stations: Station[] = [
   { name: "București Nord", isImportant: true },
@@ -35,4 +35,43 @@ export const priceResponse: PriceResponse = {
   ok: true,
   amount: 41.5,
   currency: "RON",
+};
+
+export const boardDeparturesResponse: BoardResponse = {
+  station: { name: "Bucuresti Nord", slug: "Bucuresti-Nord" },
+  direction: "departures",
+  entries: [
+    {
+      time: "08:30",
+      counterpart: { name: "Brasov", slug: "Brasov" },
+      via: [],
+      train: { category: "IR", number: "1741" },
+      durationMinutes: 150,
+    },
+    {
+      time: "10:00",
+      counterpart: { name: "Cluj-Napoca", slug: "Cluj-Napoca" },
+      via: ["Ploiesti Nord", "Sinaia"],
+      train: { category: "IC", number: "535" },
+      durationMinutes: 480,
+    },
+  ],
+  updatedAt: new Date().toISOString(),
+  source: "aggregated",
+};
+
+export const boardArrivalsResponse: BoardResponse = {
+  station: { name: "Bucuresti Nord", slug: "Bucuresti-Nord" },
+  direction: "arrivals",
+  entries: [
+    {
+      time: "09:15",
+      counterpart: { name: "Brasov", slug: "Brasov" },
+      via: [],
+      train: { category: "IR", number: "1742" },
+      durationMinutes: 150,
+    },
+  ],
+  updatedAt: new Date().toISOString(),
+  source: "aggregated",
 };

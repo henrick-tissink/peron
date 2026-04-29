@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { cors } from "hono/cors";
-import { stations, searchResponse, priceResponse } from "./fixtures.js";
+import { stations, searchResponse, priceResponse, boardDeparturesResponse, boardArrivalsResponse } from "./fixtures.js";
 
 const app = new Hono();
 
@@ -28,6 +28,11 @@ app.post("/api/search", async (c) => {
 app.post("/api/price", async (c) => {
   await c.req.json();
   return c.json(priceResponse);
+});
+
+app.get("/api/board/:slug", (c) => {
+  const direction = c.req.query("direction") ?? "departures";
+  return c.json(direction === "arrivals" ? boardArrivalsResponse : boardDeparturesResponse);
 });
 
 const port = Number(process.env.MOCK_PORT ?? 3002);
