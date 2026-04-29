@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { z } from "zod";
 import type { SearchResponse } from "@peron/types";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { searchItineraries, ApiError } from "../../../lib/api";
 import { ResultsList } from "../../../components/results-list";
 import { ErrorState } from "../../../components/error-state";
@@ -12,13 +13,19 @@ const QuerySchema = z.object({
 });
 
 export default async function SearchPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const params = await searchParams;
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("results");
+
+  const raw = await searchParams;
   const flat: Record<string, string> = {};
-  for (const [k, v] of Object.entries(params)) {
+  for (const [k, v] of Object.entries(raw)) {
     if (typeof v === "string") flat[k] = v;
   }
 
@@ -34,7 +41,7 @@ export default async function SearchPage({
     const httpStatus = err instanceof ApiError ? err.status : 0;
     return (
       <div className="mx-auto max-w-3xl px-4 py-8">
-        <HeaderQuery query={query} />
+        <HeaderQuery query={query} metaLabel={t("metaLabel")} />
         <ErrorState error={{ kind: "cfr-unavailable", httpStatus }} query={query} />
       </div>
     );
@@ -44,7 +51,7 @@ export default async function SearchPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
-      <HeaderQuery query={query} />
+      <HeaderQuery query={query} metaLabel={t("metaLabel")} />
       {!hasResults && data.warning ? (
         <ErrorState error={data.warning} query={query} />
       ) : !hasResults ? (
@@ -56,9 +63,10 @@ export default async function SearchPage({
   );
 }
 
-function HeaderQuery({ query }: { query: { from: string; to: string; date: string } }) {
+function HeaderQuery({ query, metaLabel }: { query: { from: string; to: string; date: string }; metaLabel: string }) {
   return (
     <div className="mb-6">
+      <p className="mb-1 text-xs tracking-widest text-[var(--color-text-muted)]">{metaLabel}</p>
       <h1 className="text-lg font-semibold tracking-tight">
         {query.from} → {query.to}
       </h1>
