@@ -63,8 +63,9 @@ export function SearchForm({
       </SegField>
       <button
         type="submit"
+        disabled={!canSubmit}
         aria-label={t("submit")}
-        className="bg-[var(--color-accent)] px-8 font-mono font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)]/90"
+        className="bg-[var(--color-accent)] px-8 font-mono font-semibold text-[var(--color-bg)] hover:bg-[var(--color-accent)]/90 disabled:cursor-not-allowed disabled:opacity-40"
       >
         →
       </button>
