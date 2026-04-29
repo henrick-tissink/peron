@@ -30,6 +30,12 @@ export async function bootstrap(from: string, to: string): Promise<BootstrapResu
     redirect: "manual",
   });
 
+  // CFR sometimes serves 5xx maintenance pages or 4xx redirects when busy. Surface
+  // those as upstream issues directly, not "tokens not found" parser failures.
+  if (res.status >= 400) {
+    throw new UpstreamError(`bootstrap returned ${res.status}`, res.status);
+  }
+
   const body = await res.text();
   if (body.trim() === "ReCaptchaFailed") {
     throw new CaptchaError("bootstrap hit captcha");
@@ -39,6 +45,9 @@ export async function bootstrap(from: string, to: string): Promise<BootstrapResu
   const keyMatch = body.match(/name="ConfirmationKey"[^>]*value="([^"]+)"/);
 
   if (!tokenMatch?.[1] || !keyMatch?.[1]) {
+    // 200 OK but the page lacks the expected form. Most likely an alternate captcha
+    // page or maintenance variant CFR rotates in. From the user's POV this is
+    // "CFR is unreachable", not "Peron broke" — classify as upstream.
     throw new BootstrapError(
       "tokens not found in Rute-trenuri page",
       `url=${url} tokenMatch=${!!tokenMatch} keyMatch=${!!keyMatch}`,
