@@ -1,0 +1,84 @@
+{
+  "header": {
+    "brand": "PERON/RO"
+  },
+  "footer": {
+    "site": "PERON · GARALAGARA.COM",
+    "tagline": "Construit pentru CFR Călători"
+  },
+  "home": {
+    "heroTitle": "Caută un tren.",
+    "heroSubtitle": "CFR Călători · date live · rezervă direct",
+    "popularLabel": "POPULARE",
+    "tickerLabel": "LIVE · BUCUREȘTI NORD · URMĂTOARELE PLECĂRI"
+  },
+  "searchForm": {
+    "fromLabel": "DE LA",
+    "fromPlaceholder": "Stație de plecare",
+    "toLabel": "LA",
+    "toPlaceholder": "Stație de sosire",
+    "dateLabel": "DATA",
+    "submit": "Caută",
+    "swap": "Inversează stațiile"
+  },
+  "results": {
+    "metaLabel": "REZULTATE CĂUTARE",
+    "stats": "{count, plural, one {# itinerar} other {# itinerarii}} · {latencyMs}ms",
+    "direct": "DIRECT",
+    "changes": "{count, plural, one {# schimbare} other {# schimbări}}",
+    "details": "Detalii",
+    "hide": "Ascunde",
+    "from": "DE LA",
+    "noResults": "Nu s-au găsit itinerarii.",
+    "warningCaptcha": "CFR cere un captcha. Încercați din nou într-un minut.",
+    "warningUnavailable": "CFR este indisponibil în acest moment.",
+    "warningOurBug": "Ceva s-a stricat pe partea noastră. ID eroare: {errorId}"
+  },
+  "fareMatrix": {
+    "fareType": "TIP TARIF",
+    "class1": "CLASA 1",
+    "class2": "CLASA 2",
+    "loading": "…",
+    "unavailable": "—",
+    "bookOnCfr": "Rezervă pe CFR →"
+  },
+  "fares": {
+    "adult": "Adult",
+    "adultTrenPlus": "Adult + TrenPlus",
+    "child": "Copil (6–14)",
+    "pupil": "Elev",
+    "student": "Student",
+    "senior": "Pensionar"
+  },
+  "stationBoard": {
+    "metaDepartures": "URMĂTOARELE PLECĂRI",
+    "metaArrivals": "URMĂTOARELE SOSIRI",
+    "tabDepartures": "PLECĂRI",
+    "tabArrivals": "SOSIRI",
+    "headTime": "ORA",
+    "headDestination": "DESTINAȚIE",
+    "headOrigin": "PROVENIENȚĂ",
+    "headTrain": "TREN",
+    "headDuration": "DURATĂ",
+    "via": "via {stops}",
+    "direct": "direct",
+    "updatedLabel": "ACTUALIZAT",
+    "annotation": "ORAR · AGREGAT DE LA CFR · REÎMPROSPĂTAT LA 60s",
+    "backToSearch": "← ÎNAPOI LA CĂUTARE",
+    "noEntries": "Nicio plecare programată."
+  },
+  "errors": {
+    "title404": "Pagina nu a fost găsită",
+    "code404": "ERR_NOT_FOUND",
+    "back": "← ÎNAPOI ACASĂ",
+    "title500": "Ceva nu a mers bine",
+    "code500": "ERR_INTERNAL",
+    "retry": "Încearcă din nou"
+  },
+  "language": {
+    "selectorLabel": "Limbă",
+    "en": "English",
+    "ro": "Română",
+    "de": "Deutsch"
+  }
+}

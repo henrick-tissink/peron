@@ -1,0 +1,84 @@
+{
+  "header": {
+    "brand": "PERON/RO"
+  },
+  "footer": {
+    "site": "PERON · GARALAGARA.COM",
+    "tagline": "Gebaut für CFR Călători"
+  },
+  "home": {
+    "heroTitle": "Finde einen Zug.",
+    "heroSubtitle": "CFR Călători · Echtzeitdaten · direkt buchen",
+    "popularLabel": "BELIEBT",
+    "tickerLabel": "LIVE · BUCUREȘTI NORD · NÄCHSTE ABFAHRTEN"
+  },
+  "searchForm": {
+    "fromLabel": "VON",
+    "fromPlaceholder": "Abfahrtsbahnhof",
+    "toLabel": "NACH",
+    "toPlaceholder": "Zielbahnhof",
+    "dateLabel": "DATUM",
+    "submit": "Suchen",
+    "swap": "Bahnhöfe tauschen"
+  },
+  "results": {
+    "metaLabel": "SUCHERGEBNISSE",
+    "stats": "{count, plural, one {# Verbindung} other {# Verbindungen}} · {latencyMs}ms",
+    "direct": "DIREKT",
+    "changes": "{count, plural, one {# Umstieg} other {# Umstiege}}",
+    "details": "Details",
+    "hide": "Ausblenden",
+    "from": "AB",
+    "noResults": "Keine Verbindungen gefunden.",
+    "warningCaptcha": "CFR zeigt ein Captcha. Bitte in einer Minute erneut versuchen.",
+    "warningUnavailable": "CFR ist gerade nicht erreichbar.",
+    "warningOurBug": "Bei uns ist etwas schiefgelaufen. Fehler-ID: {errorId}"
+  },
+  "fareMatrix": {
+    "fareType": "TARIFART",
+    "class1": "KLASSE 1",
+    "class2": "KLASSE 2",
+    "loading": "…",
+    "unavailable": "—",
+    "bookOnCfr": "Auf CFR buchen →"
+  },
+  "fares": {
+    "adult": "Erwachsener",
+    "adultTrenPlus": "Erwachsener + TrenPlus",
+    "child": "Kind (6–14)",
+    "pupil": "Schüler",
+    "student": "Student",
+    "senior": "Rentner"
+  },
+  "stationBoard": {
+    "metaDepartures": "NÄCHSTE ABFAHRTEN",
+    "metaArrivals": "NÄCHSTE ANKÜNFTE",
+    "tabDepartures": "ABFAHRTEN",
+    "tabArrivals": "ANKÜNFTE",
+    "headTime": "ZEIT",
+    "headDestination": "ZIEL",
+    "headOrigin": "VON",
+    "headTrain": "ZUG",
+    "headDuration": "DAUER",
+    "via": "über {stops}",
+    "direct": "direkt",
+    "updatedLabel": "AKTUALISIERT",
+    "annotation": "FAHRPLAN · VON CFR AGGREGIERT · ALLE 60s AKTUALISIERT",
+    "backToSearch": "← ZURÜCK ZUR SUCHE",
+    "noEntries": "Keine Abfahrten geplant."
+  },
+  "errors": {
+    "title404": "Seite nicht gefunden",
+    "code404": "ERR_NOT_FOUND",
+    "back": "← ZUR STARTSEITE",
+    "title500": "Etwas ist schiefgelaufen",
+    "code500": "ERR_INTERNAL",
+    "retry": "Erneut versuchen"
+  },
+  "language": {
+    "selectorLabel": "Sprache",
+    "en": "English",
+    "ro": "Română",
+    "de": "Deutsch"
+  }
+}
