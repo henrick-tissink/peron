@@ -49,9 +49,9 @@ export default async function SearchPage({
           <div className="font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
             {t("metaLabel")}
           </div>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl flex flex-wrap items-baseline gap-x-3">
             <span className="whitespace-nowrap">{fromName}</span>
-            <span className="mx-3 text-[var(--color-accent)]">→</span>
+            <span className="text-[var(--color-accent)]">→</span>
             <span className="whitespace-nowrap">{toName}</span>
           </h1>
           <div className="mt-2 font-mono text-xs text-[var(--color-text-muted)]">
