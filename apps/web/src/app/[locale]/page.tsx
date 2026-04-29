@@ -2,6 +2,7 @@ import type { Station } from "@peron/types";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { fetchStations } from "../../lib/api";
 import { SearchForm } from "../../components/search-form";
+import { LiveTicker } from "../../components/live-ticker";
 
 async function loadStations(): Promise<Station[]> {
   try {
@@ -19,26 +20,29 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
   const stations = await loadStations();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-20 md:py-28">
-      <section className="mb-12 text-center">
-        <h1 className="font-display text-5xl font-bold tracking-tight md:text-7xl">
-          {t("heroTitle").replace(/\.$/, "")}
-          <span className="text-[var(--color-accent)]">.</span>
-        </h1>
-        <p className="mt-5 font-mono text-xs tracking-widest text-[var(--color-text-muted)] uppercase">
-          {t("heroSubtitle")}
+    <>
+      <LiveTicker />
+      <div className="mx-auto max-w-3xl px-4 py-20 md:py-28">
+        <section className="mb-12 text-center">
+          <h1 className="font-display text-5xl font-bold tracking-tight md:text-7xl">
+            {t("heroTitle").replace(/\.$/, "")}
+            <span className="text-[var(--color-accent)]">.</span>
+          </h1>
+          <p className="mt-5 font-mono text-xs tracking-widest text-[var(--color-text-muted)] uppercase">
+            {t("heroSubtitle")}
+          </p>
+        </section>
+        <SearchForm stations={stations} />
+        <p className="mt-10 text-center font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
+          {t("popularLabel")} ·
+          <PopularChip from="Bucuresti-Nord" to="Cluj-Napoca" label="BUC NORD → CLUJ" />
+          ·
+          <PopularChip from="Bucuresti-Nord" to="Brasov" label="BUC NORD → BRAȘOV" />
+          ·
+          <PopularChip from="Timisoara-Nord" to="Bucuresti-Nord" label="TIMIȘOARA → BUC NORD" />
         </p>
-      </section>
-      <SearchForm stations={stations} />
-      <p className="mt-10 text-center font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
-        {t("popularLabel")} ·
-        <PopularChip from="Bucuresti-Nord" to="Cluj-Napoca" label="BUC NORD → CLUJ" />
-        ·
-        <PopularChip from="Bucuresti-Nord" to="Brasov" label="BUC NORD → BRAȘOV" />
-        ·
-        <PopularChip from="Timisoara-Nord" to="Bucuresti-Nord" label="TIMIȘOARA → BUC NORD" />
-      </p>
-    </div>
+      </div>
+    </>
   );
 }
 
