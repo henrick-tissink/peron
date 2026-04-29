@@ -60,6 +60,7 @@ export async function aggregateBoard(input: AggregateInput): Promise<BoardRespon
 
   const entries: BoardEntry[] = [];
   const seen = new Set<string>();
+  let firstStationName: string | null = null;
   for (const { other, itineraries } of results) {
     for (const it of itineraries) {
       // departures: when the train LEAVES this station; arrivals: when it ARRIVES here.
@@ -67,7 +68,9 @@ export async function aggregateBoard(input: AggregateInput): Promise<BoardRespon
       if (!time) continue;
       if (timeToMinutes(time) < nowMin) continue; // already passed
       const seg0 = it.segments[0];
-      if (!seg0) continue;
+      const lastSeg = it.segments[it.segments.length - 1];
+      const firstSeg = it.segments[0];
+      if (!seg0 || !lastSeg || !firstSeg) continue;
       const key = `${time}/${seg0.trainCategory}${seg0.trainNumber}`;
       if (seen.has(key)) continue;
       seen.add(key);
@@ -77,9 +80,21 @@ export async function aggregateBoard(input: AggregateInput): Promise<BoardRespon
         ? it.segments.slice(0, -1).map((s) => s.to).filter(Boolean)
         : [];
 
+      const counterpartName = input.direction === "departures"
+        ? (lastSeg.to || other.replace(/-/g, " "))
+        : (firstSeg.from || other.replace(/-/g, " "));
+
+      const stationName = input.direction === "departures"
+        ? (firstSeg.from || input.slug.replace(/-/g, " "))
+        : (lastSeg.to || input.slug.replace(/-/g, " "));
+
+      if (firstStationName === null && stationName) {
+        firstStationName = stationName;
+      }
+
       entries.push({
         time,
-        counterpart: { name: other.replace(/-/g, " "), slug: slugify(other) },
+        counterpart: { name: counterpartName, slug: slugify(other) },
         via,
         train: { category: seg0.trainCategory, number: seg0.trainNumber },
         durationMinutes: it.duration.hours * 60 + it.duration.minutes,
@@ -89,8 +104,10 @@ export async function aggregateBoard(input: AggregateInput): Promise<BoardRespon
 
   entries.sort((a, b) => timeToMinutes(a.time) - timeToMinutes(b.time));
 
+  const resolvedStationName = firstStationName ?? input.slug.replace(/-/g, " ");
+
   return {
-    station: { name: input.slug.replace(/-/g, " "), slug: input.slug },
+    station: { name: resolvedStationName, slug: input.slug },
     direction: input.direction,
     entries,
     updatedAt: now.toISOString(),

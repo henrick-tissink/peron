@@ -55,9 +55,9 @@ describe("ItineraryCard", () => {
     expect(screen.getByText("RON")).toBeInTheDocument();
   });
 
-  it("shows FROM label when priceFrom is null", () => {
+  it("shows nothing in price cell when priceFrom is null", () => {
     render(<ItineraryCard itinerary={{ ...direct, priceFrom: null }} />);
-    expect(screen.getByText("FROM")).toBeInTheDocument();
+    expect(screen.queryByText("FROM")).not.toBeInTheDocument();
   });
 
   it("renders 'DIRECT' label when transferCount is 0", () => {
