@@ -40,7 +40,20 @@
     "class2": "CLASA 2",
     "loading": "…",
     "unavailable": "—",
-    "bookOnCfr": "Rezervă pe CFR →"
+    "bookOnCfr": "Continuă pe CFR ↗"
+  },
+  "booking": {
+    "title": "Continuă pe CFR",
+    "close": "Închide",
+    "trainHeader": "TREN",
+    "preamble": "Site-ul CFR nu acceptă linkuri directe, deci vei reface {count, plural, one {# pas rapid} other {# pași rapizi}}:",
+    "step1": "Data este implicit setată la astăzi pe CFR — schimb-o la:",
+    "step2": "Apasă \"Caută\"",
+    "step3": "Apasă \"Detalii\" pe trenul {time} {category} {number} și alege clasa tarifară",
+    "copyDate": "📋 Copiază data",
+    "dateCopied": "✓ Copiat",
+    "cancelButton": "Anulează",
+    "openCfrButton": "Deschide CFR ↗"
   },
   "fares": {
     "adult": "Adult",

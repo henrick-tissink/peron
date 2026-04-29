@@ -19,7 +19,7 @@ export function ResultsList({
         </div>
       )}
       {data.itineraries.map((it) => (
-        <ItineraryCard key={it.id} itinerary={it} />
+        <ItineraryCard key={it.id} itinerary={it} dateIso={query.date} />
       ))}
     </div>
   );

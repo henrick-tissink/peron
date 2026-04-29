@@ -8,9 +8,12 @@ vi.mock("next-intl", () => ({
     if (k === "direct") return "DIRECT";
     if (k === "changes") return `${params?.count} changes`;
     if (k === "from") return "FROM";
-    if (k === "bookOnCfr") return "Book on CFR →";
+    if (k === "bookOnCfr") return "Continue on CFR ↗";
     return k;
   },
+  useFormatter: () => ({
+    dateTime: (_date: Date, _opts: Record<string, unknown>) => "Wed, 21 May 2026",
+  }),
 }));
 
 vi.mock("../../src/components/fare-matrix.js", () => ({

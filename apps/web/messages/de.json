@@ -40,7 +40,20 @@
     "class2": "KLASSE 2",
     "loading": "…",
     "unavailable": "—",
-    "bookOnCfr": "Auf CFR buchen →"
+    "bookOnCfr": "Weiter zu CFR ↗"
+  },
+  "booking": {
+    "title": "Weiter zu CFR",
+    "close": "Schließen",
+    "trainHeader": "ZUG",
+    "preamble": "Die CFR-Seite akzeptiert keine Direktlinks, du wirst {count, plural, one {# schnellen Schritt} other {# schnelle Schritte}} nachvollziehen:",
+    "step1": "Das Datum steht standardmäßig auf heute — ändere es auf:",
+    "step2": "Klick auf \"Caută\" (Suchen)",
+    "step3": "Klick auf \"Detalii\" beim Zug {time} {category} {number} und wähle deine Tarifklasse",
+    "copyDate": "📋 Datum kopieren",
+    "dateCopied": "✓ Kopiert",
+    "cancelButton": "Abbrechen",
+    "openCfrButton": "CFR öffnen ↗"
   },
   "fares": {
     "adult": "Erwachsener",

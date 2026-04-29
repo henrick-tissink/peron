@@ -5,11 +5,14 @@ import { useTranslations } from "next-intl";
 import type { Itinerary } from "@peron/types";
 import { FareMatrix } from "./fare-matrix";
 import { SplitFlap } from "./split-flap";
+import { BookingModal } from "./booking-modal";
 
-export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
+export function ItineraryCard({ itinerary, dateIso }: { itinerary: Itinerary; dateIso: string }) {
   const [expanded, setExpanded] = useState(false);
+  const [showBooking, setShowBooking] = useState(false);
   const t = useTranslations("results");
   const tFare = useTranslations("fareMatrix");
+  const date = new Date(`${dateIso}T12:00:00`);
   const hours = itinerary.duration.hours;
   const minutes = itinerary.duration.minutes;
 
@@ -61,14 +64,21 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
         <div className="border-b border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-7 py-4">
           <FareMatrix transactionString={itinerary.transactionString} />
           <div className="mt-3 flex justify-end">
-            <a
-              href={itinerary.bookingUrl}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              type="button"
+              onClick={() => setShowBooking(true)}
               className="bg-[var(--color-accent)] px-5 py-2 font-mono text-xs font-semibold tracking-wide text-[var(--color-bg)] hover:bg-[var(--color-accent)]/90"
             >
               {tFare("bookOnCfr")}
-            </a>
+            </button>
+            {showBooking && (
+              <BookingModal
+                itinerary={itinerary}
+                date={date}
+                bookingUrl={itinerary.bookingUrl}
+                onClose={() => setShowBooking(false)}
+              />
+            )}
           </div>
         </div>
       )}
