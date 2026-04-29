@@ -5,14 +5,17 @@ import type { Itinerary } from "@peron/types";
 function fakeItinerary(time: string, dest: string, train: string, durationMin: number, via: string[] = []): Itinerary {
   const cat = train.match(/^[A-Z]+/)?.[0] ?? "R";
   const num = train.match(/\d+/)?.[0] ?? "0";
+  const [dh, dm] = time.split(":").map(Number);
+  const total = dh * 60 + dm + durationMin;
+  const arriveTime = `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
   return {
     id: `itin-${time}-${dest}`,
     transactionString: "tx",
     sessionId: "sid",
     departure: { time, station: "București Nord" },
-    arrival: { time: "12:00", station: dest },
+    arrival: { time: arriveTime, station: dest },
     duration: { hours: Math.floor(durationMin / 60), minutes: durationMin % 60 },
-    segments: [{ trainCategory: cat, trainNumber: num, from: "București Nord", to: dest, departTime: time, arriveTime: "12:00", via }],
+    segments: [{ trainCategory: cat, trainNumber: num, from: "București Nord", to: dest, departTime: time, arriveTime, via }],
     transferCount: 0,
     priceFrom: null,
     services: { bikeCar: false, barRestaurant: false, sleeper: false, couchette: false, onlineBuying: false },

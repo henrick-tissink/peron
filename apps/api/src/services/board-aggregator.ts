@@ -62,9 +62,8 @@ export async function aggregateBoard(input: AggregateInput): Promise<BoardRespon
   const seen = new Set<string>();
   for (const { other, itineraries } of results) {
     for (const it of itineraries) {
-      // For departures, filter/display by departure time.
-      // For arrivals, use departure time from origin for dedup/filter (arrival time at dest may be synthetic/unavailable).
-      const time = it.departure.time;
+      // departures: when the train LEAVES this station; arrivals: when it ARRIVES here.
+      const time = input.direction === "departures" ? it.departure.time : it.arrival.time;
       if (!time) continue;
       if (timeToMinutes(time) < nowMin) continue; // already passed
       const seg0 = it.segments[0];
