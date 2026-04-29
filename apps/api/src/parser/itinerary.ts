@@ -229,14 +229,13 @@ export function parseOne(
       ? `${CFR_BASE}/ro-RO/Tren/${segments[0].trainNumber}`
       : CFR_BASE;
 
-  // Booking URL: prefer the buy-form action; otherwise synthesize a rute URL.
-  const buyFormAction =
-    el.find('form[id^="form-buy-itinerary"]').first().attr("action") ??
-    el.find('form[action*="Buying" i]').first().attr("action") ??
-    "";
-  const bookingUrl = buyFormAction
-    ? absoluteUrl(buyFormAction)
-    : `${CFR_BASE}/ro-RO/Rute-trenuri/${toStationSlug(depStation)}/${toStationSlug(arrStationFinal)}`;
+  // Booking URL: deep-link to the search-prefilled page. CFR's `/Buying/Go` is
+  // POST-only and 302s to home on GET, so the form-action URL embedded in the
+  // itinerary HTML is not usable as a public link. CFR also doesn't honor any
+  // query-param date prefill on `/Rute-trenuri/{from}/{to}` (returns 405 with
+  // any query string), so the user re-picks the date once they land. Industry-
+  // standard deep-link fidelity for train aggregators.
+  const bookingUrl = `${CFR_BASE}/ro-RO/Rute-trenuri/${toStationSlug(depStation)}/${toStationSlug(arrStationFinal)}`;
 
   return {
     id: `itinerary-${index}`,
