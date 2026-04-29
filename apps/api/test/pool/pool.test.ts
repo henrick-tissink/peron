@@ -6,32 +6,59 @@ import { CaptchaError } from "../../src/cfr/errors.js";
 
 const CFR_BASE = "https://bilete.cfrcalatori.ro";
 
-function mockBootstrap() {
+function mockBootstrap(record?: Array<{ from: string; to: string }>) {
   server.use(
-    http.get(`${CFR_BASE}/ro-RO/Rute-trenuri/:from/:to`, () =>
-      new HttpResponse(
+    http.get(`${CFR_BASE}/ro-RO/Rute-trenuri/:from/:to`, ({ params }) => {
+      record?.push({ from: String(params.from), to: String(params.to) });
+      return new HttpResponse(
         `<input name="__RequestVerificationToken" value="tok" /><input name="ConfirmationKey" value="ck" />`,
         { status: 200, headers: { "set-cookie": "s=1" } },
-      ),
-    ),
+      );
+    }),
   );
 }
 
 describe("SessionPool", () => {
   beforeEach(() => mockBootstrap());
 
-  it("lazily spawns sessions up to maxSize on demand", async () => {
+  it("bootstraps a fresh session per call", async () => {
     const pool = new SessionPool({ maxSize: 3 });
-    await pool.withSession(async () => {});
+    await pool.withSession("A", "B", async () => {});
     expect(pool.size).toBe(1);
   });
 
-  it("reuses an existing fresh session for subsequent requests", async () => {
+  it("bootstraps against the user's (from, to) pair, not a fixed warm pair", async () => {
+    const calls: Array<{ from: string; to: string }> = [];
+    mockBootstrap(calls);
+    const pool = new SessionPool({ maxSize: 3 });
+
+    await pool.withSession("Brasov", "Iasi", async () => {});
+    await pool.withSession("Sibiu", "Cluj-Napoca", async () => {});
+
+    // Each call must scrape the page for that exact pair — CFR's
+    // ConfirmationKey is route-bound. Sharing across pairs returns 400.
+    expect(calls).toEqual([
+      { from: "Brasov", to: "Iasi" },
+      { from: "Sibiu", to: "Cluj-Napoca" },
+    ]);
+  });
+
+  it("never reuses a session across different (from, to) pairs", async () => {
     const pool = new SessionPool({ maxSize: 3 });
     const ids = new Set<string>();
-    await pool.withSession(async (s) => { ids.add(s.id); });
-    await pool.withSession(async (s) => { ids.add(s.id); });
-    expect(ids.size).toBe(1);
+    await pool.withSession("Brasov", "Iasi", async (s) => { ids.add(s.id); });
+    await pool.withSession("Sibiu", "Cluj-Napoca", async (s) => { ids.add(s.id); });
+    expect(ids.size).toBe(2);
+  });
+
+  it("evicts the oldest idle session when at maxSize", async () => {
+    const pool = new SessionPool({ maxSize: 2 });
+    let firstId = "";
+    await pool.withSession("A", "B", async (s) => { firstId = s.id; });
+    await pool.withSession("C", "D", async () => {});
+    await pool.withSession("E", "F", async () => {});
+    expect(pool.size).toBe(2);
+    expect(pool.getById(firstId)).toBeUndefined();
   });
 
   it("fans concurrent requests across multiple sessions up to maxSize", async () => {
@@ -39,22 +66,22 @@ describe("SessionPool", () => {
     const sessionIds = new Set<string>();
 
     await Promise.all(
-      [0, 1, 2].map(() =>
-        pool.withSession(async (s) => {
+      [0, 1, 2].map((i) =>
+        pool.withSession(`From${i}`, `To${i}`, async (s) => {
           sessionIds.add(s.id);
           await new Promise((r) => setTimeout(r, 30));
         }),
       ),
     );
 
-    expect(sessionIds.size).toBeGreaterThan(1);
+    expect(sessionIds.size).toBe(3);
     expect(pool.size).toBeLessThanOrEqual(3);
   });
 
   it("finds a session by id (for transactionString pinning)", async () => {
     const pool = new SessionPool({ maxSize: 3 });
     let id = "";
-    await pool.withSession(async (s) => { id = s.id; });
+    await pool.withSession("A", "B", async (s) => { id = s.id; });
     const found = pool.getById(id);
     expect(found?.id).toBe(id);
   });
@@ -62,29 +89,6 @@ describe("SessionPool", () => {
   it("getById returns undefined for unknown id", async () => {
     const pool = new SessionPool({ maxSize: 3 });
     expect(pool.getById("nonexistent")).toBeUndefined();
-  });
-});
-
-describe("SessionPool — age-based refresh", () => {
-  beforeEach(() => mockBootstrap());
-
-  it("refreshes a session older than the TTL before reuse", async () => {
-    const pool = new SessionPool({ maxSize: 1, staleAfterMs: 50 });
-    let firstWarmAt = 0;
-    await pool.withSession(async (s) => { firstWarmAt = s.lastWarmedAt; });
-    await new Promise((r) => setTimeout(r, 60));
-    await pool.withSession(async (s) => {
-      expect(s.lastWarmedAt).toBeGreaterThan(firstWarmAt);
-    });
-  });
-
-  it("does not refresh a session younger than TTL", async () => {
-    const pool = new SessionPool({ maxSize: 1, staleAfterMs: 10_000 });
-    let firstWarmAt = 0;
-    await pool.withSession(async (s) => { firstWarmAt = s.lastWarmedAt; });
-    await pool.withSession(async (s) => {
-      expect(s.lastWarmedAt).toBe(firstWarmAt);
-    });
   });
 });
 
@@ -104,7 +108,7 @@ describe("SessionPool — circuit breaker", () => {
 
     for (let i = 0; i < 3; i++) {
       try {
-        await pool.withSession(async (s) => {
+        await pool.withSession("A", "B", async (s) => {
           const { searchRaw } = await import("../../src/cfr/client.js");
           await searchRaw((s as unknown as { creds_: { cookie: string; confirmationKey: string; requestVerificationToken: string } }).creds_, { from: "A", to: "B", date: "2026-05-21" });
         });
@@ -112,7 +116,7 @@ describe("SessionPool — circuit breaker", () => {
     }
 
     await expect(
-      pool.withSession(async () => "should-not-run"),
+      pool.withSession("A", "B", async () => "should-not-run"),
     ).rejects.toBeInstanceOf(CaptchaError);
   });
 });

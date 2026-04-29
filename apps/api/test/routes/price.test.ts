@@ -39,7 +39,7 @@ describe("POST /api/price", () => {
     const app = makeApp({ pool, pins, stations: new StationRegistry() });
 
     let sessionId = "";
-    await pool.withSession(async (s) => { sessionId = s.id; });
+    await pool.withSession("Bucuresti-Nord", "Brasov", async (s) => { sessionId = s.id; });
     pins.set("tx-abc", sessionId);
 
     const res = await app.request("/api/price", {
