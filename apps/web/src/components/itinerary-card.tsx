@@ -17,15 +17,15 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className={`grid w-full grid-cols-[90px_1fr_60px_24px] sm:grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
+        className={`grid w-full grid-cols-[110px_minmax(0,1fr)_60px_24px] sm:grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
       >
         <div className="font-mono text-base">
           <span className="text-[var(--color-accent)]">{itinerary.departure.time}</span>
           <span className="mx-1 text-[var(--color-text-subtle)]">→</span>
           <span className="text-[var(--color-text)]">{itinerary.arrival.time}</span>
         </div>
-        <div>
-          <div className="font-mono text-sm">
+        <div className="min-w-0">
+          <div className="font-mono text-sm truncate">
             {itinerary.segments.map((s, i) => (
               <span key={i}>
                 {i > 0 && <span className="mx-2 text-[var(--color-text-subtle)]">+</span>}
@@ -34,7 +34,7 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
               </span>
             ))}
           </div>
-          <div className="mt-1 font-mono text-[11px] text-[var(--color-text-subtle)]">
+          <div className="mt-1 font-mono text-[11px] text-[var(--color-text-subtle)] truncate">
             {itinerary.departure.station} — {itinerary.arrival.station}
           </div>
         </div>
@@ -50,9 +50,7 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
               <span className="text-[var(--color-text)]">{itinerary.priceFrom.amount}</span>
               <span className="ml-1 text-[var(--color-text-subtle)] text-[11px]">{itinerary.priceFrom.currency}</span>
             </>
-          ) : (
-            <span className="font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">{t("from")}</span>
-          )}
+          ) : null}
         </div>
         <div className={`text-right text-base ${expanded ? "text-[var(--color-accent)]" : "text-[var(--color-text-subtle)]"}`}>
           {expanded ? "⌄" : "›"}

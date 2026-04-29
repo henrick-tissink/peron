@@ -44,15 +44,15 @@ export default async function SearchPage({
   } catch (err) {
     const httpStatus = err instanceof ApiError ? err.status : 0;
     return (
-      <div>
+      <div className="mx-auto max-w-5xl">
         <div className="border-b border-[var(--color-border)] px-7 py-6">
           <div className="font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
             {t("metaLabel")}
           </div>
           <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-            {fromName}
+            <span className="whitespace-nowrap">{fromName}</span>
             <span className="mx-3 text-[var(--color-accent)]">→</span>
-            {toName}
+            <span className="whitespace-nowrap">{toName}</span>
           </h1>
           <div className="mt-2 font-mono text-xs text-[var(--color-text-muted)]">
             {format.dateTime(date, { weekday: "short", day: "numeric", month: "short", year: "numeric" }).toUpperCase()}
@@ -69,15 +69,15 @@ export default async function SearchPage({
   const hasResults = itineraries.length > 0;
 
   return (
-    <div>
+    <div className="mx-auto max-w-5xl">
       <div className="border-b border-[var(--color-border)] px-7 py-6">
         <div className="font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
           {t("metaLabel")}
         </div>
         <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-          {fromName}
+          <span className="whitespace-nowrap">{fromName}</span>
           <span className="mx-3 text-[var(--color-accent)]">→</span>
-          {toName}
+          <span className="whitespace-nowrap">{toName}</span>
         </h1>
         <div className="mt-2 font-mono text-xs text-[var(--color-text-muted)]">
           {format.dateTime(date, { weekday: "short", day: "numeric", month: "short", year: "numeric" }).toUpperCase()}

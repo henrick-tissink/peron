@@ -21,13 +21,16 @@ export function BoardClient({
 }) {
   const [direction, setDirection] = useState<BoardDirection>("departures");
   const [data, setData] = useState<BoardResponse | null>(initialDepartures);
+  const [loading, setLoading] = useState(false);
 
   // Refetch on direction change
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setData(null);
     fetchBoard(slug, direction)
-      .then((r) => !cancelled && setData(r))
-      .catch(() => !cancelled && setData(null));
+      .then((r) => { if (!cancelled) { setData(r); setLoading(false); } })
+      .catch(() => { if (!cancelled) { setData(null); setLoading(false); } });
     return () => { cancelled = true; };
   }, [direction, slug]);
 
@@ -43,7 +46,7 @@ export function BoardClient({
   const counterpartHead = direction === "departures" ? labels.headDestination : labels.headOrigin;
 
   return (
-    <>
+    <div className="mx-auto max-w-5xl">
       <div className="flex items-end justify-between gap-4 border-b border-[var(--color-border)] px-7 py-8 flex-wrap">
         <div>
           <div className="flex items-center gap-2 font-mono text-[11px] tracking-widest text-[var(--color-accent)] uppercase">
@@ -77,24 +80,34 @@ export function BoardClient({
         ))}
       </div>
 
-      <div className="grid grid-cols-[80px_1fr_70px] sm:grid-cols-[90px_1fr_100px_100px] gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">
+      <div className="grid grid-cols-[80px_minmax(0,1fr)_100px] sm:grid-cols-[90px_1fr_100px_100px] gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">
         <span>{labels.headTime}</span>
         <span>{counterpartHead}</span>
         <span className="text-right">{labels.headTrain}</span>
         <span className="text-right hidden sm:block">{labels.headDuration}</span>
       </div>
 
-      {data && data.entries.length === 0 ? (
+      {loading ? (
+        <div className="px-7 py-1">
+          {[1,2,3,4,5].map((i) => (
+            <div key={i} className="grid grid-cols-[80px_minmax(0,1fr)_100px] sm:grid-cols-[90px_1fr_100px_100px] gap-3 sm:gap-5 items-center py-5 border-b border-[var(--color-border)]">
+              <div className="h-6 w-16 animate-pulse rounded bg-[var(--color-bg-elev)]" />
+              <div><div className="h-4 w-32 animate-pulse rounded bg-[var(--color-bg-elev)]" /><div className="mt-2 h-3 w-20 animate-pulse rounded bg-[var(--color-bg-elev)]" /></div>
+              <div className="h-4 w-16 animate-pulse rounded bg-[var(--color-bg-elev)] ml-auto" />
+              <div className="h-4 w-12 animate-pulse rounded bg-[var(--color-bg-elev)] ml-auto hidden sm:block" />
+            </div>
+          ))}
+        </div>
+      ) : data && data.entries.length === 0 ? (
         <div className="px-7 py-12 text-center font-mono text-sm text-[var(--color-text-muted)]">{labels.noEntries}</div>
       ) : (
         data?.entries.map((e, i) => <BoardRow key={`${e.time}-${e.train.number}-${i}`} entry={e} stationSlug={slug} direction={direction} />)
       )}
 
-      <div className="px-7 pt-4 pb-1 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">{labels.annotation}</div>
-      <footer className="flex justify-between border-t border-[var(--color-border)] px-7 py-4 font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
-        <span>PERON · GARALAGARA.COM</span>
+      <div className="flex justify-between items-center px-7 pt-4 pb-6 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">
+        <span>{labels.annotation}</span>
         <Link href="/" className="hover:text-[var(--color-accent)]">{labels.backToSearch}</Link>
-      </footer>
-    </>
+      </div>
+    </div>
   );
 }
