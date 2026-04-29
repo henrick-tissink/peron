@@ -96,5 +96,5 @@ export function SplitFlap({
 
   // SSR-safe: server renders empty span; client mounts and animates.
   // aria-label exposes the actual value to screen readers (cycling chars are decorative).
-  return <span ref={containerRef} className={className} aria-label={value} />;
+  return <span ref={containerRef} className={className} aria-label={value} style={{ whiteSpace: "nowrap" }} />;
 }
