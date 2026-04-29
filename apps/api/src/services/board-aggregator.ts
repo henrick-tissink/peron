@@ -14,13 +14,13 @@ export type AggregateInput = {
 function nowMinutes(now: Date): number {
   // Bucharest is UTC+2 (winter) / UTC+3 (summer). Use Intl to derive HH:MM in Europe/Bucharest.
   const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit", hour12: false });
-  const [hh, mm] = fmt.format(now).split(":").map(Number);
-  return hh * 60 + mm;
+  const parts = fmt.format(now).split(":").map(Number);
+  return (parts[0] ?? 0) * 60 + (parts[1] ?? 0);
 }
 
 function timeToMinutes(t: string): number {
-  const [hh, mm] = t.split(":").map(Number);
-  return hh * 60 + mm;
+  const parts = t.split(":").map(Number);
+  return (parts[0] ?? 0) * 60 + (parts[1] ?? 0);
 }
 
 async function pmap<T, R>(items: T[], limit: number, fn: (t: T) => Promise<R>): Promise<R[]> {

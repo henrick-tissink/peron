@@ -5,8 +5,8 @@ import type { Itinerary } from "@peron/types";
 function fakeItinerary(time: string, dest: string, train: string, durationMin: number, via: string[] = []): Itinerary {
   const cat = train.match(/^[A-Z]+/)?.[0] ?? "R";
   const num = train.match(/\d+/)?.[0] ?? "0";
-  const [dh, dm] = time.split(":").map(Number);
-  const total = dh * 60 + dm + durationMin;
+  const timeParts = time.split(":").map(Number);
+  const total = (timeParts[0] ?? 0) * 60 + (timeParts[1] ?? 0) + durationMin;
   const arriveTime = `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
   return {
     id: `itin-${time}-${dest}`,
@@ -55,7 +55,7 @@ describe("aggregateBoard", () => {
     ]);
     const result = await aggregateBoard({ slug: "Bucuresti-Nord", direction: "departures", search, destinations: ["Brasov"] });
     expect(result.entries).toHaveLength(1);
-    expect(result.entries[0].time).toBe("15:30");
+    expect(result.entries[0]?.time).toBe("15:30");
   });
 
   it("returns warning kind=no-data when all searches are empty", async () => {
@@ -71,6 +71,6 @@ describe("aggregateBoard", () => {
       return [fakeItinerary("13:30", "Bucuresti-Nord", "IR3000", 90)];
     });
     const result = await aggregateBoard({ slug: "Bucuresti-Nord", direction: "arrivals", search, destinations: ["Brasov"] });
-    expect(result.entries[0].counterpart.slug).toBe("Brasov");
+    expect(result.entries[0]?.counterpart.slug).toBe("Brasov");
   });
 });

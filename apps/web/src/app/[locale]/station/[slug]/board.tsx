@@ -77,11 +77,11 @@ export function BoardClient({
         ))}
       </div>
 
-      <div className="grid grid-cols-[90px_1fr_100px_100px] gap-5 border-b border-[var(--color-border)] px-7 py-3 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">
+      <div className="grid grid-cols-[80px_1fr_70px] sm:grid-cols-[90px_1fr_100px_100px] gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">
         <span>{labels.headTime}</span>
         <span>{counterpartHead}</span>
         <span className="text-right">{labels.headTrain}</span>
-        <span className="text-right">{labels.headDuration}</span>
+        <span className="text-right hidden sm:block">{labels.headDuration}</span>
       </div>
 
       {data && data.entries.length === 0 ? (

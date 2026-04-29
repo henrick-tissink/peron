@@ -16,7 +16,7 @@ export function BoardRow({ entry, stationSlug, direction }: { entry: BoardEntry;
   return (
     <Link
       href={`/search?${params.toString()}`}
-      className="grid grid-cols-[90px_1fr_100px_100px] items-center gap-5 border-b border-[var(--color-border)] px-7 py-5 transition-colors hover:bg-[var(--color-bg-subtle)]"
+      className="grid grid-cols-[80px_1fr_70px] sm:grid-cols-[90px_1fr_100px_100px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-4 sm:py-5 transition-colors hover:bg-[var(--color-bg-subtle)]"
     >
       <div className="font-mono text-2xl font-medium text-[var(--color-accent)]">{entry.time}</div>
       <div className="font-mono text-sm">
@@ -29,7 +29,7 @@ export function BoardRow({ entry, stationSlug, direction }: { entry: BoardEntry;
         <span className="text-[var(--color-accent)] font-semibold">{entry.train.category}</span>{" "}
         <span className="text-[var(--color-text-muted)]">{entry.train.number}</span>
       </div>
-      <div className="text-right font-mono text-sm text-[var(--color-text-muted)]">
+      <div className="text-right font-mono text-sm text-[var(--color-text-muted)] hidden sm:block">
         {hours}h {String(minutes).padStart(2, "0")}m
       </div>
     </Link>

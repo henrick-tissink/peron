@@ -17,7 +17,7 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className={`grid w-full grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-5 border-b border-[var(--color-border)] px-7 py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
+        className={`grid w-full grid-cols-[90px_1fr_60px_24px] sm:grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
       >
         <div className="font-mono text-base">
           <span className="text-[var(--color-accent)]">{itinerary.departure.time}</span>
@@ -38,10 +38,10 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
             {itinerary.departure.station} — {itinerary.arrival.station}
           </div>
         </div>
-        <div className="text-right font-mono text-sm text-[var(--color-text-muted)]">
+        <div className="text-right font-mono text-sm text-[var(--color-text-muted)] hidden sm:block">
           {hours}h {String(minutes).padStart(2, "0")}m
         </div>
-        <div className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-ok)]">
+        <div className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-ok)] hidden sm:block">
           {itinerary.transferCount === 0 ? t("direct") : t("changes", { count: itinerary.transferCount })}
         </div>
         <div className="text-right font-mono text-sm">
