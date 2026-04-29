@@ -47,6 +47,9 @@ export async function searchItinerariesSafe(deps: AppDeps, params: SearchInput):
   } catch (err) {
     if (err instanceof CaptchaError) return [];
     if (err instanceof UpstreamError) return [];
+    // Any other CFR/pool-level error (BootstrapError, session race, etc.) should
+    // not take down the whole board — swallow it and contribute an empty list.
+    if (err instanceof Error) return [];
     throw err;
   }
 }
