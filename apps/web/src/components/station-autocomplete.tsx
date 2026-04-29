@@ -72,7 +72,7 @@ export function StationAutocomplete({
       <label
         id={labelId}
         htmlFor={name}
-        className="text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]"
+        className="sr-only"
       >
         {label}
       </label>
@@ -94,13 +94,13 @@ export function StationAutocomplete({
         onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)] px-3 py-2 text-sm outline-none focus:border-[var(--color-peron-blue)]"
+        className="bg-transparent text-[var(--color-text)] placeholder:text-[var(--color-text-subtle)] outline-none w-full font-mono text-sm"
       />
       {showList && (
         <ul
           id={listboxId}
           role="listbox"
-          className="absolute left-0 right-0 top-full z-10 mt-1 max-h-60 overflow-auto rounded-[var(--radius-control)] border border-[var(--color-border)] bg-[var(--color-bg)] py-1 shadow-md"
+          className="absolute z-10 mt-2 w-full rounded border border-[var(--color-border-strong)] bg-[var(--color-bg-elev)] shadow-lg max-h-64 overflow-y-auto"
         >
           {suggestions.map((s, i) => (
             <li
@@ -112,12 +112,15 @@ export function StationAutocomplete({
                 onChange(s.name);
                 setOpen(false);
               }}
-              className={`cursor-pointer px-3 py-2 text-sm ${
+              className={`px-4 py-2 font-mono text-sm cursor-pointer text-[var(--color-text)] hover:bg-[var(--color-bg-subtle)] ${
                 i === activeIdx
-                  ? "bg-[var(--color-peron-blue-soft)] text-[var(--color-peron-blue)]"
-                  : "text-[var(--color-text)]"
+                  ? "bg-[var(--color-accent)]/10 text-[var(--color-accent)]"
+                  : ""
               }`}
             >
+              {s.isImportant && (
+                <span className="mr-1.5 inline-block h-1 w-1 rounded-full bg-[var(--color-accent)]" />
+              )}
               {s.name}
             </li>
           ))}
