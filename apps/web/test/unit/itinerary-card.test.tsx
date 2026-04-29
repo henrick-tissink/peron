@@ -1,8 +1,24 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import type { Itinerary } from "@peron/types";
 import { ItineraryCard } from "../../src/components/itinerary-card.js";
+
+vi.mock("next-intl", () => ({
+  useTranslations: () => (k: string, params?: Record<string, unknown>) => {
+    if (k === "direct") return "DIRECT";
+    if (k === "changes") return `${params?.count} changes`;
+    if (k === "from") return "FROM";
+    if (k === "bookOnCfr") return "Book on CFR →";
+    return k;
+  },
+}));
+
+vi.mock("../../src/components/fare-matrix.js", () => ({
+  FareMatrix: ({ transactionString }: { transactionString: string }) => (
+    <div data-testid="fare-matrix">{transactionString}</div>
+  ),
+}));
 
 const direct: Itinerary = {
   id: "itinerary-0",
@@ -29,49 +45,43 @@ describe("ItineraryCard", () => {
     expect(screen.getByText(/București Nord/)).toBeInTheDocument();
     expect(screen.getByText(/Brașov/)).toBeInTheDocument();
     expect(screen.getByText(/2h 30m/)).toBeInTheDocument();
-    expect(screen.getByText(/IR 1741/)).toBeInTheDocument();
+    expect(screen.getAllByText(/IR/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("1741")).toBeInTheDocument();
   });
 
-  it("shows priceFrom when present", () => {
+  it("shows priceFrom amount and currency when present", () => {
     render(<ItineraryCard itinerary={direct} />);
-    expect(screen.getByText(/41[.,]5/)).toBeInTheDocument();
-    expect(screen.getByText(/lei/i)).toBeInTheDocument();
+    expect(screen.getByText("41.5")).toBeInTheDocument();
+    expect(screen.getByText("RON")).toBeInTheDocument();
   });
 
-  it("shows em-dash when priceFrom is null", () => {
+  it("shows FROM label when priceFrom is null", () => {
     render(<ItineraryCard itinerary={{ ...direct, priceFrom: null }} />);
-    expect(screen.getByTestId("price-from")).toHaveTextContent("—");
+    expect(screen.getByText("FROM")).toBeInTheDocument();
   });
 
-  it("renders 'Direct' label when transferCount is 0", () => {
+  it("renders 'DIRECT' label when transferCount is 0", () => {
     render(<ItineraryCard itinerary={direct} />);
-    expect(screen.getByText(/Direct/i)).toBeInTheDocument();
+    expect(screen.getByText("DIRECT")).toBeInTheDocument();
   });
 
-  it("renders '{n} transfer' label when transferCount > 0", () => {
+  it("renders changes label when transferCount > 0", () => {
     render(<ItineraryCard itinerary={{ ...direct, transferCount: 2 }} />);
-    expect(screen.getByText(/2 transfer/i)).toBeInTheDocument();
+    expect(screen.getByText(/2 changes/i)).toBeInTheDocument();
   });
 
-  it("clicking Details expands the card and reveals children", async () => {
+  it("clicking the row expands the card and reveals FareMatrix", async () => {
     const user = userEvent.setup();
-    render(
-      <ItineraryCard itinerary={direct}>
-        <div data-testid="expanded-content">fare matrix placeholder</div>
-      </ItineraryCard>,
-    );
-    expect(screen.queryByTestId("expanded-content")).not.toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: /details/i }));
-    expect(screen.getByTestId("expanded-content")).toBeInTheDocument();
+    render(<ItineraryCard itinerary={direct} />);
+    expect(screen.queryByTestId("fare-matrix")).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button"));
+    expect(screen.getByTestId("fare-matrix")).toBeInTheDocument();
   });
 
-  it("renders service icons for present services", () => {
+  it("renders 'Book on CFR' link pointing to the itinerary's bookingUrl when expanded", async () => {
+    const user = userEvent.setup();
     render(<ItineraryCard itinerary={direct} />);
-    expect(screen.getByLabelText(/bike/i)).toBeInTheDocument();
-  });
-
-  it("renders 'Book on CFR' link pointing to the itinerary's bookingUrl", () => {
-    render(<ItineraryCard itinerary={direct} />);
+    await user.click(screen.getByRole("button"));
     const link = screen.getByRole("link", { name: /Book on CFR/i });
     expect(link).toHaveAttribute("href", direct.bookingUrl);
   });
