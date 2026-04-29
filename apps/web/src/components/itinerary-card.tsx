@@ -18,7 +18,7 @@ export function ItineraryCard({ itinerary }: { itinerary: Itinerary }) {
       <button
         type="button"
         onClick={() => setExpanded((v) => !v)}
-        className={`grid w-full grid-cols-[110px_minmax(0,1fr)_60px_24px] sm:grid-cols-[100px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
+        className={`grid w-full grid-cols-[150px_minmax(0,1fr)_60px_24px] sm:grid-cols-[170px_1fr_100px_80px_110px_24px] items-center gap-3 sm:gap-5 border-b border-[var(--color-border)] px-4 sm:px-7 py-3 sm:py-4 text-left transition-colors hover:bg-[var(--color-bg-subtle)] ${expanded ? "bg-[var(--color-bg-subtle)]" : ""}`}
       >
         <div className="font-mono text-base flex items-baseline gap-1">
           <SplitFlap value={itinerary.departure.time} className="text-[var(--color-accent)]" />
