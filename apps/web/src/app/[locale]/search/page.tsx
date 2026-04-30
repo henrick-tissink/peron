@@ -109,6 +109,6 @@ export async function generateMetadata({
   const from = typeof params["from"] === "string" ? params["from"] : "";
   const to = typeof params["to"] === "string" ? params["to"] : "";
   return {
-    title: from && to ? `${from} → ${to} · Peron` : "Search · Peron",
+    title: from && to ? `${from} → ${to} · Gara la Gara` : "Search · Gara la Gara",
   };
 }

@@ -1,4 +1,6 @@
-# Peron production runbook
+# Gara la Gara production runbook
+
+> Repo codename: **peron**. User-facing brand: **Gara la Gara** at garalagara.com.
 
 ## Server
 - Provider: Hetzner Cloud

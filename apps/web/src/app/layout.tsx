@@ -16,7 +16,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata = {
-  title: "Peron — train search for Romania",
+  title: "Gara la Gara — train search for Romania",
   description: "A cleaner, faster, mobile-friendly frontend for Romania's national rail network.",
 };
 

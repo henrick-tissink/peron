@@ -1,6 +1,9 @@
-# Peron
+# Gara la Gara
 
-A cleaner frontend for searching Romanian trains on CFR Călători.
+> User-facing brand: **Gara la Gara** at https://garalagara.com.
+> Repo / package / infra codename: **peron** (kept for historical reasons; same pattern as Anthropic / Claude).
+
+A cleaner frontend for searching Romanian trains on CFR Călători. Romanian for "station to station" — the entire product story in three syllables.
 
 ## Dev
 
