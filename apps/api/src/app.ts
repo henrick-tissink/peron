@@ -54,7 +54,12 @@ export function makeApp(deps: AppDeps) {
 
 // Default app used by tests and dev: build fresh deps.
 export const app = makeApp({
-  pool: new SessionPool({ maxSize: 3 }),
+  // maxSize tuned for: (12-cell fare matrix on /api/price) × (concurrent users)
+  // + (board aggregator parallelism, 5 destinations) + (live ticker polling).
+  // Each session is ~1KB of cookies+tokens, so 30 is a free upgrade. The
+  // previous size 3 caused fare-matrix cells to return "expired" on any
+  // concurrent traffic — confirmed via QA suite.
+  pool: new SessionPool({ maxSize: 30 }),
   pins: new PinMap({ ttlMs: 30 * 60 * 1000 }),
   stations: new StationRegistry(),
 });
