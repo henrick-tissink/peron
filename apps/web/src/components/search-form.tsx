@@ -36,7 +36,7 @@ export function SearchForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid max-w-2xl mx-auto grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-px overflow-hidden rounded-lg border border-[var(--color-border-strong)] bg-[var(--color-border-strong)]"
+      className="grid max-w-2xl mx-auto grid-cols-1 md:grid-cols-[1fr_1fr_1fr_auto] gap-px border border-[var(--color-border-strong)] bg-[var(--color-border-strong)]"
     >
       <SegField label={t("fromLabel")}>
         <StationAutocomplete
