@@ -10,7 +10,7 @@ export function toStationSlug(name: string): string {
   const mapped = name.replace(/[ȘșȚțŞşŢţ]/g, (ch) => RO_MAP[ch] ?? ch);
   const stripped = mapped.normalize("NFD").replace(/\p{Diacritic}/gu, "");
   return stripped
-    .replace(/[^A-Za-z0-9\s-]/g, "")
+    .replace(/[^A-Za-z0-9\s\-()]/g, "")
     .trim()
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
