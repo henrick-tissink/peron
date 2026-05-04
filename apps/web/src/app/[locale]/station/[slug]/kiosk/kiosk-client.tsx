@@ -55,18 +55,21 @@ export function KioskClient({
   }, [slug, direction]);
 
   useEffect(() => {
+    // HH:MM only: seconds would tick every 1s and dominate the visual budget
+    // on a wall-mounted kiosk. Real station boards render HH:MM.
     function tick() {
       const fmt = new Intl.DateTimeFormat("en-GB", {
         timeZone: "Europe/Bucharest",
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
         hour12: false,
       });
       setClock(fmt.format(new Date()));
     }
     tick();
-    const id = setInterval(tick, 1_000);
+    // Re-check every 5 s; only flips on minute-change because SplitFlap diffs
+    // per cell now and ignores no-op writes.
+    const id = setInterval(tick, 5_000);
     return () => clearInterval(id);
   }, []);
 
@@ -88,18 +91,18 @@ export function KioskClient({
           </span>
         </div>
         <SplitFlap
-          value={clock || "--:--:--"}
+          value={clock || "--:--"}
           className="font-mono text-2xl sm:text-4xl font-bold text-[var(--color-accent)]"
         />
       </div>
 
-      {/* COLUMN HEADERS — desktop only */}
-      <div className="hidden md:grid grid-cols-[140px_minmax(0,1fr)_180px_120px_120px] gap-6 border-b border-[var(--color-border)] px-12 py-3 font-mono text-[10px] tracking-[0.3em] text-[var(--color-text-subtle)] uppercase">
+      {/* COLUMN HEADERS — desktop only. Widths match KioskRow grid below. */}
+      <div className="hidden md:grid grid-cols-[200px_minmax(0,1fr)_180px_100px_140px] gap-6 border-b border-[var(--color-border)] px-12 py-3 font-mono text-[10px] tracking-[0.3em] text-[var(--color-text-subtle)] uppercase">
         <span>{labels.time}</span>
         <span>{counterpartHeader}</span>
         <span>{labels.train}</span>
         <span>{labels.platform}</span>
-        <span className="text-right">…</span>
+        <span className="text-right" aria-hidden="true" />
       </div>
 
       {/* ROWS */}
@@ -145,25 +148,27 @@ function KioskRow({
 
   return (
     <div
-      className={`grid grid-cols-[1fr_auto] md:grid-cols-[140px_minmax(0,1fr)_180px_120px_120px] gap-3 md:gap-6 border-b border-[var(--color-border)] px-8 md:px-12 py-4 md:py-5 ${
+      className={`grid grid-cols-[1fr_auto] md:grid-cols-[200px_minmax(0,1fr)_180px_100px_140px] gap-4 md:gap-6 border-b border-[var(--color-border)] px-8 md:px-12 py-5 md:py-6 ${
         cancelled ? "opacity-60" : ""
       }`}
     >
-      {/* TIME */}
+      {/* TIME — split-flap fits well on short numeric values like HH:MM. */}
       <SplitFlap
         value={entry.time}
-        className={`font-mono text-3xl sm:text-4xl md:text-5xl font-medium ${
+        className={`font-mono text-3xl sm:text-4xl md:text-5xl font-medium leading-none ${
           cancelled ? "text-red-500 line-through decoration-1" : "text-[var(--color-accent)]"
         }`}
       />
 
-      {/* DESTINATION + via */}
+      {/* DESTINATION + via — plain bold display text. SplitFlap on long Romanian
+          station names with diacritics (e.g. "Aeroport Henri Coandă") at this
+          size renders one dark cell per character with visible gaps; reads as
+          stutter instead of a Solari board. Time and platform stay flapped. */}
       <div className="md:order-none order-3 col-span-2 md:col-span-1 min-w-0 flex flex-col justify-center">
-        <SplitFlap
-          value={entry.counterpart.name}
-          className="font-display text-xl sm:text-2xl md:text-3xl font-bold text-[var(--color-text)] truncate"
-        />
-        <div className="mt-1 font-mono text-[11px] sm:text-xs tracking-wider text-[var(--color-text-subtle)] uppercase truncate">
+        <span className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-[var(--color-text)] truncate leading-tight">
+          {entry.counterpart.name}
+        </span>
+        <div className="mt-1.5 font-mono text-[11px] sm:text-xs tracking-wider text-[var(--color-text-subtle)] uppercase truncate">
           {entry.via.length === 0
             ? directLabel
             : `${viaLabel} ${viaDisplay.join(" · ")}${viaOverflow > 0 ? ` +${viaOverflow}` : ""}`}
@@ -171,27 +176,27 @@ function KioskRow({
       </div>
 
       {/* TRAIN — category badge + number + operator */}
-      <div className="hidden md:flex flex-col justify-center font-mono text-xl">
-        <div>
-          <span className="text-[var(--color-accent)] font-bold">{entry.train.category}</span>{" "}
-          <SplitFlap value={entry.train.number} className="text-[var(--color-text-muted)]" />
+      <div className="hidden md:flex flex-col justify-center font-mono text-xl leading-none">
+        <div className="flex items-baseline gap-2">
+          <span className="text-[var(--color-accent)] font-bold">{entry.train.category}</span>
+          <span className="text-[var(--color-text-muted)]">{entry.train.number}</span>
         </div>
         {entry.operator ? (
-          <div className="mt-0.5 text-[10px] tracking-wider text-[var(--color-text-subtle)] uppercase truncate">
+          <div className="mt-1.5 text-[10px] tracking-wider text-[var(--color-text-subtle)] uppercase truncate">
             {entry.operator}
           </div>
         ) : null}
       </div>
 
-      {/* PLATFORM */}
+      {/* PLATFORM — visually loud only when populated; absent state fades. */}
       <div className="hidden md:flex items-center justify-start font-mono">
         {entry.platform ? (
           <SplitFlap
             value={entry.platform}
-            className="text-3xl font-bold text-[var(--color-accent)]"
+            className="text-3xl font-bold text-[var(--color-accent)] leading-none"
           />
         ) : (
-          <span className="text-2xl text-[var(--color-text-subtle)]">—</span>
+          <span className="text-base text-[var(--color-text-subtle)]/60">·</span>
         )}
       </div>
 

@@ -14,17 +14,17 @@ export function SplitFlap({
   className?: string;
 }) {
   const containerRef = useRef<HTMLSpanElement>(null);
-  const prevValueRef = useRef<string | null>(null);
+  const displayedRef = useRef<string[]>([]); // what the cells are currently showing
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    if (prevValueRef.current === value) return;
-    prevValueRef.current = value;
 
     const target = Array.from(value);
+    const prev = displayedRef.current;
 
-    // Build/rebuild cells if structure mismatch (initial render or value length change)
+    // Rebuild cells when length changes (length is the only mutation that
+    // requires a structural reset — character changes animate in place).
     if (container.children.length !== target.length) {
       container.innerHTML = "";
       for (const ch of target) {
@@ -33,11 +33,12 @@ export function SplitFlap({
         cell.textContent = " ";
         container.appendChild(cell);
       }
+      displayedRef.current = new Array(target.length).fill(" ");
     }
 
     const cells = Array.from(container.children) as HTMLSpanElement[];
 
-    // prefers-reduced-motion → instant snap
+    // prefers-reduced-motion → instant snap, no animation.
     const reducedMotion =
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -50,16 +51,25 @@ export function SplitFlap({
         cells[i]!.textContent = ch;
         cells[i]!.className = ch === " " ? "sf-cell sf-cell-space" : "sf-cell";
       }
+      displayedRef.current = target.slice();
       return;
     }
 
+    // Per-cell diff: only animate cells whose character actually changed since
+    // the previous render. This is the real Solari behaviour — a clock ticking
+    // 17:00:00 → 17:00:01 only flips the seconds-units cell. Without this, a
+    // 1-Hz clock stays mid-animation forever and reads as random cipher.
     for (let i = 0; i < cells.length; i++) {
       const ch = target[i] ?? " ";
+      const prevCh = prev[i];
       const cell = cells[i]!;
+
+      if (prevCh === ch) continue; // no change at this position
 
       if (ch === " ") {
         cell.textContent = " ";
         cell.className = "sf-cell sf-cell-space";
+        displayedRef.current[i] = ch;
         continue;
       }
 
@@ -77,6 +87,7 @@ export function SplitFlap({
               cell.textContent = ch;
               cell.classList.add("sf-flipping");
               timers.push(setTimeout(() => cell.classList.remove("sf-flipping"), 60));
+              displayedRef.current[i] = ch;
               return;
             }
             cell.textContent = ALPHABET[Math.floor(Math.random() * ALPHABET.length)] ?? " ";
