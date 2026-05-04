@@ -102,5 +102,13 @@
     "direct": "direkt",
     "exit": "KIOSK BEENDEN ↗",
     "enter": "▶ KIOSK-MODUS"
+  },
+  "train": {
+    "liveLabel": "ZUG LIVE",
+    "currentlyBetween": "Zwischen {from} und {to}",
+    "reportedAt": "Stand: {time}",
+    "annotation": "INFOFER · LIVE · 30s AKTUALISIERUNG",
+    "backToSearch": "← ZURÜCK ZUR SUCHE",
+    "notFound": "Zug {number} nicht gefunden."
   }
 }

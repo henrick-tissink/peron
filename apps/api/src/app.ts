@@ -8,6 +8,7 @@ import { stationsRoute } from "./routes/stations.js";
 import { searchRoute } from "./routes/search.js";
 import { priceRoute } from "./routes/price.js";
 import { boardRoute } from "./routes/board.js";
+import { trainRoute } from "./routes/train.js";
 
 export type AppDeps = {
   pool: SessionPool;
@@ -48,6 +49,7 @@ export function makeApp(deps: AppDeps) {
   app.route("/api/search", searchRoute());
   app.route("/api/price", priceRoute());
   app.route("/api/board", boardRoute());
+  app.route("/api/train", trainRoute());
 
   return app;
 }

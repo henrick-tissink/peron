@@ -102,5 +102,13 @@
     "direct": "direct",
     "exit": "IEȘIRE KIOSK ↗",
     "enter": "▶ MODUL KIOSK"
+  },
+  "train": {
+    "liveLabel": "TREN ÎN MERS",
+    "currentlyBetween": "Între {from} și {to}",
+    "reportedAt": "raportat la {time}",
+    "annotation": "INFOFER · LIVE · ACTUALIZARE 30s",
+    "backToSearch": "← ÎNAPOI LA CĂUTARE",
+    "notFound": "Trenul {number} nu a fost găsit."
   }
 }

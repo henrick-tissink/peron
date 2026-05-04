@@ -102,5 +102,13 @@
     "direct": "direct",
     "exit": "EXIT KIOSK ↗",
     "enter": "▶ KIOSK MODE"
+  },
+  "train": {
+    "liveLabel": "LIVE TRAIN",
+    "currentlyBetween": "Between {from} and {to}",
+    "reportedAt": "as of {time}",
+    "annotation": "INFOFER · LIVE · REFRESH 30s",
+    "backToSearch": "← BACK TO SEARCH",
+    "notFound": "Train {number} not found."
   }
 }

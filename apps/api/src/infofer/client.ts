@@ -19,8 +19,7 @@ function extractCookie(setCookieHeader: string | null): string {
     .join("; ");
 }
 
-async function bootstrap(slug: string): Promise<InfoferSession> {
-  const url = `${INFOFER_BASE}/ro-RO/Statie/${slug}`;
+async function bootstrapAt(url: string): Promise<InfoferSession> {
   const res = await fetch(url, {
     method: "GET",
     headers: { "accept": "text/html,application/xhtml+xml" },
@@ -62,7 +61,7 @@ async function bootstrap(slug: string): Promise<InfoferSession> {
  * platform info — strictly more data than CFR's booking site exposes.
  */
 export async function fetchStationBoardHtml(slug: string): Promise<string> {
-  const session = await bootstrap(slug);
+  const session = await bootstrapAt(`${INFOFER_BASE}/ro-RO/Statie/${slug}`);
 
   const body = toFormBody({
     Date: session.date,
@@ -100,6 +99,55 @@ export async function fetchStationBoardHtml(slug: string): Promise<string> {
 
   if (res.status >= 400) {
     throw new UpstreamError(`infofer StationsResult returned ${res.status}`, res.status);
+  }
+
+  return html;
+}
+
+/**
+ * Fetch the per-train detail HTML — full route, per-stop times + delays, and
+ * (when reportable) the train's current position between two stations and the
+ * "as of HH:MM" telemetry timestamp.
+ */
+export async function fetchTrainResultHtml(trainNumber: string): Promise<string> {
+  const session = await bootstrapAt(`${INFOFER_BASE}/ro-RO/Tren/${encodeURIComponent(trainNumber)}`);
+
+  const body = toFormBody({
+    Date: session.date,
+    TrainRunningNumber: trainNumber,
+    SelectedBranchCode: "",
+    ReCaptcha: "",
+    ConfirmationKey: session.confirmationKey,
+    IsSearchWanted: "False",
+    IsReCaptchaFailed: "False",
+    __RequestVerificationToken: session.requestVerificationToken,
+  });
+
+  const res = await fetch(`${INFOFER_BASE}/ro-RO/Trains/TrainsResult`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+      "cookie": session.cookie,
+      "x-requested-with": "XMLHttpRequest",
+      "accept": "text/html,application/xhtml+xml",
+    },
+    body,
+  });
+
+  if (res.status >= 500) {
+    throw new UpstreamError(`infofer TrainsResult returned ${res.status}`, res.status);
+  }
+
+  const html = await res.text();
+  const trimmed = html.trim();
+  if (trimmed === "ReCaptchaFailed") {
+    throw new CaptchaError("infofer TrainsResult hit captcha");
+  }
+  if (trimmed === "ServiceTemporarilyUnavailable") {
+    throw new UpstreamError("infofer TrainsResult unavailable", 503);
+  }
+  if (res.status >= 400) {
+    throw new UpstreamError(`infofer TrainsResult returned ${res.status}`, res.status);
   }
 
   return html;

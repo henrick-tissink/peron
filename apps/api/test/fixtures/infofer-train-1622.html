@@ -1,0 +1,2605 @@
+
+	<link rel="stylesheet" href="/lib/npm/leaflet/leaflet.css" />
+	<div class="jumbotron p-3 mb-3">
+		<div class="row">
+			<div class="col-md-7 col-lg-8">
+				<h2>
+					<span class="span-train-category-ir">
+						IR
+					</span>
+					<span class="color-blue">1622</span> în <span class="color-blue">04.05.2026</span>
+				</h2>
+				<p class="text-1-1rem">Operat de CFR C&#x103;l&#x103;tori</p>
+
+				<div class="mb-2 ">
+					<div class="d-inline">
+								<img class="img-fluid img-train-service-medium" src="/images/Icons/TrainServices/3.svg" alt="Biciclete" title="Biciclete" />
+								<span class="sr-only">Biciclete</span>
+								<img class="img-fluid img-train-service-medium" src="/images/Icons/TrainServices/6.svg" alt="Clasa 1" title="Clasa 1" />
+								<span class="sr-only">Clasa 1</span>
+								<img class="img-fluid img-train-service-medium" src="/images/Icons/TrainServices/7.svg" alt="Clasa a 2-a" title="Clasa a 2-a" />
+								<span class="sr-only">Clasa a 2-a</span>
+								<img class="img-fluid img-train-service-medium" src="/images/Icons/TrainServices/21.svg" alt="Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)" title="Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)" />
+								<span class="sr-only">Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5 col-lg-4">
+				<div class="float-md-right">
+					<img src="/images/Logos/1153.png?v=2" />
+				</div>
+			</div>
+		</div>
+			<div class="d-flex flex-column flex-md-row">
+				<div class="m-1 flex-grow-1">
+					<button class="w-100 btn btn-primary" id="button-group-1758323">
+						<h3 class="m-0 p-0 text-1-4rem">
+							Tren principal<br />
+							<span class="text-1-3rem">Sibiu <i class="fad fa-chevron-double-right"></i> Bucure&#x219;ti Nord</span>
+						</h3>
+					</button>
+				</div>
+
+					<div class="m-1 flex-grow-1">
+						<button class="w-100 btn btn-outline-primary" id="button-group-1877323">
+							<h3 class="m-0 p-0 text-1-4rem">
+								Grupă<br />
+								<span class="text-1-3rem">T&#xE2;rgu Mure&#x219; <i class="fad fa-chevron-double-right"></i> Bucure&#x219;ti Nord</span>
+							</h3>
+						</button>
+					</div>
+			</div>
+				<script>
+					$("#button-group-1758323").click(function () {
+
+								$("#button-group-1758323").removeClass("btn-primary");
+								$("#button-group-1758323").addClass("btn-outline-primary");
+								$("#div-stations-branch-1758323").addClass("d-none");
+							
+								$("#button-group-1877323").removeClass("btn-primary");
+								$("#button-group-1877323").addClass("btn-outline-primary");
+								$("#div-stations-branch-1877323").addClass("d-none");
+													$("#button-group-1758323").addClass("btn-primary"); $("#button-group-1758323").removeClass("btn-outline-primary"); $("#div-stations-branch-1758323").removeClass("d-none");
+					});
+				</script>
+				<script>
+					$("#button-group-1877323").click(function () {
+
+								$("#button-group-1758323").removeClass("btn-primary");
+								$("#button-group-1758323").addClass("btn-outline-primary");
+								$("#div-stations-branch-1758323").addClass("d-none");
+							
+								$("#button-group-1877323").removeClass("btn-primary");
+								$("#button-group-1877323").addClass("btn-outline-primary");
+								$("#div-stations-branch-1877323").addClass("d-none");
+													$("#button-group-1877323").addClass("btn-primary"); $("#button-group-1877323").removeClass("btn-outline-primary"); $("#div-stations-branch-1877323").removeClass("d-none");
+					});
+				</script>
+	</div>
+	<div id="div-fullscreen-map" class="not-displayed">
+		<div id="div-fullscreen-map-div" class="div-middle">
+			<div id="div-fullscreen-map-div-div-1">
+				<div class="bg-white p-3 flex-grow-0">
+					<div class="d-flex flex-column flex-sm-row">
+						<div class="flex-grow-0 order-sm-0 order-2">
+							<h4 class="mb-0" id="h4-map">Hartă parcurs tren</h4>
+						</div>
+						<div class="flex-grow-1 order-sm-1 order-1"></div>
+						<div class="flex-grow-0 order-sm-2 order-0" role="group" aria-label="Map options">
+							<div class="text-1-5em btn-group float-right">
+								<button class="btn bg-gray-very-light-hover" id="button-reset-map">Reini&#x21B;ializeaz&#x103; <i class="fas fa-redo-alt"></i></button>
+								<button class="btn bg-gray-very-light-hover" id="button-close-map">&#xCE;nchide <i class="fas fa-window-close"></i></button>
+							</div>
+						</div>
+					</div>
+					<div class="d-none d-sm-block">
+						<div class="row">
+							<div class="col-sm-5 col-md-4">
+								<h4 class="mb-0"><i class="fas fa-calendar-alt"></i> 04.05.2026</h4>
+							</div>
+							<div class="col-sm-7 col-md-8">
+								<h4 class="mb-0">
+									<i class="fas fa-train"></i>
+									<span class="span-train-category-ir">
+										IR
+									</span> <span id="span-map-train-running-number">1622</span>
+								</h4>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="div-fullscreen-2-map-div" class="flex-grow-1 w-100">
+				</div>
+				<div id="div-train-map-script-partial"></div>
+			</div>
+		</div>
+	</div>
+	<div class="div-a-back">
+		<form method="get" id="form-back" action="/ro-RO/Trains">
+			<input type="hidden" value="04.05.2026" data-val="true" data-val-required="V&#x103; rug&#x103;m selecta&#x21B;i data!" id="Date" name="Date" />
+			<input type="hidden" value="1622" data-val="true" data-val-required="V&#x103; rug&#x103;m completa&#x21B;i num&#x103;rul trenului!" id="TrainRunningNumber" name="TrainRunningNumber" />
+			<input type="hidden" value="False" id="input-is-search-wanted" data-val="true" data-val-required="The IsSearchWanted field is required." name="IsSearchWanted" />
+			<button type="submit" id="button-back-results" class="btn btn-secondary mb-1"><i class="fas fa-arrow-left"></i> &#xCE;napoi</button>
+			<button type="button" id="button-share-page-link" class="btn btn-secondary mb-1"><i class="fas fa-share-square"></i> Distribuie pagina</button>
+				<button type="button" class="btn btn-secondary mb-1" id="button-map">
+					<i class="fas fa-map"></i> Hart&#x103;
+				</button>
+		</form>
+
+		<div class="fa-2x not-displayed" id="div-loading-map"><i class="fas fa-circle-notch fa-spin"></i></div>
+
+		<script>
+			var form = "#form-back";
+			$("#button-back-results").click(function () {
+				$("#input-is-search-wanted").val("true");
+				$(form).attr("method", "get");
+				$(form).submit();
+			});
+		</script>
+		<div id="div-share-page-link" class="not-displayed">
+    <div class="container mt-2">
+        <div>
+            <label for="textarea-page-link">Link</label>
+        </div>
+
+        <div class="d-flex">
+            <div class="mr-2">
+                <textarea readonly id="textarea-page-link" name="textarea-page-link" class="form-control" rows="3" cols="30"></textarea>
+            </div>
+            <div>
+                <button id="button-copy-page-link" class="btn btn-outline-success"><i class="far fa-copy"></i> Copiere link</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        var currentPageLink = window.location.href;
+
+        $("#textarea-page-link").html(currentPageLink);
+        $("#button-share-page-link").click(function () {
+            if($("#div-share-page-link").hasClass("not-displayed"))
+            {
+                $("#div-share-page-link").removeClass("not-displayed");
+
+            }
+            else {
+                $("#div-share-page-link").addClass("not-displayed");
+
+            }
+
+        })
+        $("#button-copy-page-link").click(function () {
+            $("#textarea-page-link").focus();
+            $("#textarea-page-link").select();
+            try {
+                var successful = document.execCommand('copy');
+                var commandMessage = successful ? 'successful' : 'unsuccessful';
+                console.log('Fallback: Copying text command was ' + commandMessage);
+            } catch (error) {
+                console.error('Fallback: Oops, unable to copy', error);
+            }
+        })
+</script>
+	</div>
+	<div class="mb-5">
+
+			<div id="div-stations-branch-1758323" class=" mt-3">
+				
+<div class="mb-5">
+	<h4>
+		Parcurs tren
+		Sibiu–Bucure&#x219;ti Nord
+	</h4>
+
+		<div>
+			<p class="text-1-1rem">
+
+					<i class="fas fa-stopwatch"></i>
+								<span class="color-darkgreen">
+F&#x103;r&#x103; &#xEE;nt&#xE2;rziere								</span>
+la plecarea din Avrig
+									<span class="">
+										(Raportat la 17:33).
+									</span>
+													<span class="">
+						<span>Conform itinerariului, trenul se află</span>
+							<span>între stațiile</span>
+							<span class="text-bold">Avrig - </span>
+							<span class="text-bold">Ucea.</span>
+						<span>Puteți apăsa pe butonul ”Hartă” pentru a vedea locația.</span>
+					</span>
+
+			</p>
+		</div>
+
+	<ul class="list-group">
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Sibiu?Date=04.05.2026">Sibiu</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 0
+										</div>
+										<div class="col-md-3">
+										</div>
+										<div class="col-md-2">
+linia 3    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+												<div class="text-0-8rem">
+													<i class="fas fa-train"></i> Trenul pleacă cu numărul
+													<span class="span-train-category-ir">IR</span>
+													1622 în 04.05.2026
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">16:33</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:02</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Talmaciu?Date=04.05.2026">T&#x103;lmaciu</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 18
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+linia 4    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:03</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:11</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Podu-Olt?Date=04.05.2026">Podu Olt</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 22
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+linia 3    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:12</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:23</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Avrig?Date=04.05.2026">Avrig</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 33
+										</div>
+										<div class="col-md-3">
+5 min oprire										</div>
+										<div class="col-md-2">
+linia 3    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:28</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:53</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Ucea?Date=04.05.2026">Ucea</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 59
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:54</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">18:18</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Fagaras?Date=04.05.2026">F&#x103;g&#x103;ra&#x219;</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 84
+										</div>
+										<div class="col-md-3">
+3 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">18:21</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">19:16</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Codlea?Date=04.05.2026">Codlea</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 135
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">19:17</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">19:40</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Brasov?Date=04.05.2026">Bra&#x219;ov</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 149
+										</div>
+										<div class="col-md-3">
+20 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+													<div class="text-0-8rem"><i class="fas fa-arrow-right"></i> Trenul primește vagoane de la T&#xE2;rgu Mure&#x219;.</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:00</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">20:35</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Predeal?Date=04.05.2026">Predeal</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 175
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:37</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">20:46</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Azuga?Date=04.05.2026">Azuga</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 182
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:47</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">20:53</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Busteni?Date=04.05.2026">Bu&#x219;teni</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 186
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:54</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:02</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Sinaia?Date=04.05.2026">Sinaia</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 194
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:04</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:17</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Comarnic?Date=04.05.2026">Comarnic</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 209
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:18</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:31</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Campina?Date=04.05.2026">C&#xE2;mpina</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 223
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:32</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:53</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Ploiesti-Vest?Date=04.05.2026">Ploie&#x219;ti Vest</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 256
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:55</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">22:19</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Buftea?Date=04.05.2026">Buftea</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 298
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">22:20</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">22:35</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Bucuresti-Nord?Date=04.05.2026">Bucure&#x219;ti Nord</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 315
+										</div>
+										<div class="col-md-3">
+										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+	</ul>
+</div>
+
+<div class="mb-5">
+
+	<div>
+		<h4>
+			Servicii tren
+			Sibiu–Bucure&#x219;ti Nord
+		</h4>
+		<div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/3.svg" alt="Biciclete" title="Biciclete" />
+						</div>
+					</div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/6.svg" alt="Clasa 1" title="Clasa 1" />
+						</div>
+					</div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/7.svg" alt="Clasa a 2-a" title="Clasa a 2-a" />
+						</div>
+					</div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/21.svg" alt="Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)" title="Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)" />
+						</div>
+					</div>
+		</div>
+
+		<p>
+			Trenul are următoarele servicii:
+<span class="color-blue">biciclete</span> (de la stația Bra&#x219;ov până la ultima stație), <span class="color-blue">clasa 1</span> (pe tot parcursul), <span class="color-blue">clasa a 2-a</span> (pe tot parcursul), <span class="color-blue">loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)</span> (pe tot parcursul).		</p>
+	</div>
+</div>
+
+
+			</div>
+			<div id="div-stations-branch-1877323" class="d-none mt-3">
+				
+<div class="mb-5">
+	<h4>
+		Parcurs tren
+		T&#xE2;rgu Mure&#x219;–Bucure&#x219;ti Nord
+	</h4>
+
+		<div>
+			<p class="text-1-1rem">
+
+					<i class="fas fa-stopwatch"></i>
+								<span class="color-darkgreen">
+F&#x103;r&#x103; &#xEE;nt&#xE2;rziere								</span>
+la plecarea din Siculeni
+									<span class="">
+										(Raportat la 17:40).
+									</span>
+													<span class="">
+						<span>Conform itinerariului, trenul se află</span>
+							<span>între stațiile</span>
+							<span class="text-bold">Siculeni - </span>
+							<span class="text-bold">Miercurea Ciuc.</span>
+						<span>Puteți apăsa pe butonul ”Hartă” pentru a vedea locația.</span>
+					</span>
+
+			</p>
+		</div>
+
+	<ul class="list-group">
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Targu-Mures?Date=04.05.2026">T&#xE2;rgu Mure&#x219;</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 0
+										</div>
+										<div class="col-md-3">
+										</div>
+										<div class="col-md-2">
+linia 2    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+												<div class="text-0-8rem">
+													<i class="fas fa-train"></i> Trenul pleacă cu numărul
+													<span class="span-train-category-ir">IR</span>
+													1646 în 04.05.2026
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">13:44</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">14:28</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Reghin?Date=04.05.2026">Reghin</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 32
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+linia 2    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">14:29</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">14:46</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Deda?Date=04.05.2026">Deda</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 54
+										</div>
+										<div class="col-md-3">
+12 min oprire										</div>
+										<div class="col-md-2">
+linia 4    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">14:58</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">16:01</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Toplita?Date=04.05.2026">Topli&#x21B;a</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 98
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+linia 3    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">16:03</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">16:34</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Gheorgheni?Date=04.05.2026">Gheorgheni</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 132
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+linia 3    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">16:35</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">16:56</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Izvoru-Muresului?Date=04.05.2026">Izvoru Mure&#x219;ului</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 151
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+linia 3    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">16:57</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:13</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Izvoru-Oltului?Date=04.05.2026">Izvoru Oltului</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 162
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+linia 2    										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:14</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:32</div>
+												<div class="text-0-8rem color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Siculeni?Date=04.05.2026">Siculeni</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 179
+										</div>
+										<div class="col-md-3">
+6 min oprire										</div>
+										<div class="col-md-2">
+linia 3C   										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:38</div>
+												<div class="text-0-8rem text-right color-darkgreen">
+la timp												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">17:46</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Miercurea-Ciuc?Date=04.05.2026">Miercurea Ciuc</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 187
+										</div>
+										<div class="col-md-3">
+6 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">17:52</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">18:16</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Baile-Tusnad-Hm?Date=04.05.2026">B&#x103;ile Tu&#x219;nad Hm</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 216
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">18:17</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">18:52</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Sfantu-Gheorghe?Date=04.05.2026">Sf&#xE2;ntu Gheorghe</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 250
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">18:54</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">19:34</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Brasov?Date=04.05.2026">Bra&#x219;ov</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 282
+										</div>
+										<div class="col-md-3">
+26 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+												<div class="text-0-8rem">
+													<i class="fas fa-train"></i> Trenul își schimbă numărul în
+													<span class="span-train-category-ir">IR</span>
+													1622
+												</div>
+													<div class="text-0-8rem"><i class="fas fa-arrow-right"></i> Trenul primește vagoane de la Sibiu.</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:00</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">20:35</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Predeal?Date=04.05.2026">Predeal</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 308
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:37</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">20:46</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Azuga?Date=04.05.2026">Azuga</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 315
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:47</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">20:53</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Busteni?Date=04.05.2026">Bu&#x219;teni</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 319
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">20:54</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:02</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Sinaia?Date=04.05.2026">Sinaia</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 327
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:04</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:17</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Comarnic?Date=04.05.2026">Comarnic</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 342
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:18</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:31</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Campina?Date=04.05.2026">C&#xE2;mpina</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 356
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:32</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">21:53</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Ploiesti-Vest?Date=04.05.2026">Ploie&#x219;ti Vest</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 389
+										</div>
+										<div class="col-md-3">
+2 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">21:55</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">22:19</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Buftea?Date=04.05.2026">Buftea</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 431
+										</div>
+										<div class="col-md-3">
+1 min oprire										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+										<div class="text-1-3rem text-right">22:20</div>
+												<div class="text-0-8rem text-right color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+				<li class="list-group-item">
+					<div class="row text-1-1rem" style="">
+						<div class="col-3 col-md-2">
+							<div class="div-middle">
+								<div>
+										<div class="text-1-3rem">22:35</div>
+												<div class="text-0-8rem color-gray">
+la timp*												</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-6 col-md-8">
+							<div class="div-middle">
+								<div class="w-100">
+									<div class="row">
+										<div class="col-md-5 color-blue w-100">
+											<div class="div-middle">
+												<a href="/ro-RO/Statie/Bucuresti-Nord?Date=04.05.2026">Bucure&#x219;ti Nord</a>
+											</div>
+										</div>
+										<div class="col-md-2">
+											km 448
+										</div>
+										<div class="col-md-3">
+										</div>
+										<div class="col-md-2">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-12">
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-3 col-md-2">
+							<div class="float-right div-middle">
+								<div class="float-right">
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+	</ul>
+</div>
+
+<div class="mb-5">
+
+	<div>
+		<h4>
+			Servicii tren
+			T&#xE2;rgu Mure&#x219;–Bucure&#x219;ti Nord
+		</h4>
+		<div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/3.svg" alt="Biciclete" title="Biciclete" />
+						</div>
+					</div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/6.svg" alt="Clasa 1" title="Clasa 1" />
+						</div>
+					</div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/7.svg" alt="Clasa a 2-a" title="Clasa a 2-a" />
+						</div>
+					</div>
+					<div class="d-inline-block">
+						<div class="div-icon-train-service-small">
+							<img class="img-fluid img-train-service-small" src="/images/Icons/TrainServices/21.svg" alt="Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)" title="Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)" />
+						</div>
+					</div>
+		</div>
+
+		<p>
+			Trenul are următoarele servicii:
+<span class="color-blue">biciclete</span>, <span class="color-blue">clasa 1</span>, <span class="color-blue">clasa a 2-a</span>, <span class="color-blue">loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)</span>.		</p>
+	</div>
+</div>
+
+	<div class="mb-5">
+
+		<h4>Alte info tren  T&#xE2;rgu Mure&#x219;–Bucure&#x219;ti Nord</h4>
+		<p>Transb.auto 26.05-16.09</p>
+	</div>
+
+			</div>
+	</div>
+		<div class="mb-5">
+			<h4>Grupe</h4>
+			<div>
+					<p>Pe l&#xE2;ng&#x103; traseul principal Sibiu&#x2013;Bucure&#x219;ti Nord, trenul mai are o grupă.</p>
+
+					<p>
+						<span class="badge badge-secondary">Grupa #1</span>
+
+								În stația Bra&#x219;ov, trenul prime&#x219;te vagoane de la T&#xE2;rgu Mure&#x219;, de unde a circulat de asemenea cu denumirea de
+								<span class="span-train-category-ir">
+									IR
+								</span>
+								1646.
+												</p>
+			</div>
+		</div>
+	<div>
+		<h4>Trenuri ast&#x103;zi</h4>
+		<div class="row">
+			<div class="col-md-4">
+				<ul>
+						<li>
+							<a href="/ro-RO/Tren/532">Tren IC 532</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/564">Tren IC 564</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/1632">Tren IR 1632</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/2563">Tren R 2563</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/3528">Tren R 3528</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/7912">Tren R-E 7912</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/8201">Tren R 8201</a>
+						</li>
+				</ul>
+			</div>
+			<div class="col-md-4">
+				<ul>
+						<li>
+							<a href="/ro-RO/Tren/9205">Tren R-E 9205</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/9257">Tren R-E 9257</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/9436">Tren R 9436</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/9578">Tren R 9578</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/10062">Tren R-E 10062</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/10239">Tren R 10239</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/10324">Tren R 10324</a>
+						</li>
+				</ul>
+			</div>
+			<div class="col-md-4">
+				<ul>
+						<li>
+							<a href="/ro-RO/Tren/10387">Tren R 10387</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/11109">Tren R 11109</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/11250">Tren R 11250</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/11480">Tren R 11480</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/12532">Tren IR 12532</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/13714">Tren R 13714</a>
+						</li>
+						<li>
+							<a href="/ro-RO/Tren/14140">Tren R 14140</a>
+						</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+<div>
+
+
+    <div class="alert alert-info mt-4">
+        <div class="mb-1"><button class="btn btn-info" id="button-show-train-symbols">Legenda simbolurilor trenului</button></div>
+        <div id="div-train-symbols" class="not-displayed">
+            <ul class="list-unstyled mt-2">
+                <li class="mt-1">
+                    <div class="d-flex">
+                        <div class="mr-2">
+                            <div class="img-train-service-medium overflow-hidden text-center color-gray text-1-4rem">                                
+                                *
+                            </div>    
+                        </div>
+                        <div>
+                            Informa&#x21B;iile &#xEE;n timp real afi&#x219;ate cu gri &#x219;i * sunt valori estimate.                            
+                        </div>
+                    </div>
+
+                </li>
+                <li class="mt-1">
+                    <div class="d-flex">
+                        <div class="mr-2">
+                            <div class="img-train-service-medium p-0 overflow-hidden">
+                                <div class="div-itinerary-service-all-fill"></div>
+                            </div>
+                        </div>
+                        <div>
+                            Toate trenurile din itinerariu con&#x21B;in acest serviciu/ofert&#x103;. Se afi&#x219;eaz&#x103; chiar dac&#x103; itinerariul are un singur tren.
+                        </div>
+                    </div>
+
+                </li>
+                <li class="mt-1">
+                    <div class="d-flex">
+                        <div class="mr-2">
+                            <div class="img-train-service-medium p-0 overflow-hidden">
+                                <div class="div-itinerary-service-partially-fill"></div>
+                            </div>
+                        </div>
+                        <div>
+                            Doar o parte din trenurile din itinerariu con&#x21B;in acest serviciu/ofert&#x103;.
+                        </div>
+                    </div>
+                </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/29.svg" />
+                                </div>
+                                <div>
+Asisten&#x21B;&#x103; PRM                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/28.svg" />
+                                </div>
+                                <div>
+Automat de v&#xE2;nzare r&#x103;coritoare &#x219;i gust&#x103;ri                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/2.svg" />
+                                </div>
+                                <div>
+Bagaje voluminoase                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/3.svg" />
+                                </div>
+                                <div>
+Biciclete                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/33.svg" />
+                                </div>
+                                <div>
+Bilete online indisponibile                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/6.svg" />
+                                </div>
+                                <div>
+Clasa 1                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/7.svg" />
+                                </div>
+                                <div>
+Clasa a 2-a                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/9.svg" />
+                                </div>
+                                <div>
+Cu&#x219;et&#x103; 4 paturi                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/10.svg" />
+                                </div>
+                                <div>
+Cu&#x219;et&#x103; 6 paturi                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/12.svg" />
+                                </div>
+                                <div>
+Dormit 2 paturi                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/11.svg" />
+                                </div>
+                                <div>
+Dormit 3 paturi                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/13.svg" />
+                                </div>
+                                <div>
+Dormit lux 2 paturi                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/14.svg" />
+                                </div>
+                                <div>
+Dormit lux single                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/15.svg" />
+                                </div>
+                                <div>
+Dormit single                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/21.svg" />
+                                </div>
+                                <div>
+Loc rezervat (biletul se emite obligatoriu &#x219;i automat cu tichetul de rezervare inclus &#xEE;n pre&#x21B;)                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/22.svg" />
+                                </div>
+                                <div>
+Loc rezervat (op&#x21B;ional)                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/16.svg" />
+                                </div>
+                                <div>
+Ofert&#x103; tarifar&#x103;                                </div>
+                            </div>
+
+                        </li>
+                        <li class="mt-1">
+                            <div class="d-flex">
+                                <div class="mr-2">
+                                    <img class="img-train-service-medium" src="/images/Icons/TrainServices/17.svg" />
+                                </div>
+                                <div>
+Restaurant/ Bar                                </div>
+                            </div>
+
+                        </li>
+
+
+            </ul>
+        </div>
+
+        Datele sunt furnizate de operatorii de transport feroviar de c&#x103;l&#x103;tori
+(Astra Trans Carpatic, CFR C&#x103;l&#x103;tori, Ferotrafic TFI, Interregional C&#x103;l&#x103;tori, Regio C&#x103;l&#x103;tori, Softrans &#x219;i Transferoviar C&#x103;l&#x103;tori).        Informa&#x21B;iile prezentate au caracter orientativ &#x219;i nu ne asum&#x103;m r&#x103;spunderea pentru eventualele pagube produse &#xEE;n urma utiliz&#x103;rii acestor informa&#x21B;ii. Pentru confirmarea acestora v&#x103; rug&#x103;m s&#x103; contacta&#x21B;i operatorii de transport feroviar. Informa&#x21B;iile prezentate sunt protejate de legea 8/1996. F&#x103;r&#x103; acordul scris al CFR C&#x103;l&#x103;tori &#x219;i al Informatic&#x103; Feroviar&#x103;, reproducerea informa&#x21B;iilor prezentate va suporta rigorile legii.
+    </div>
+</div>
+<script>
+    $("#button-show-train-symbols").click(function () {
+                                    if($("#div-train-symbols").hasClass("not-displayed")) {
+            $("#div-train-symbols").removeClass("not-displayed");
+                                    }
+        else {
+            $("#div-train-symbols").addClass("not-displayed");
+
+                                    }
+
+                                })
+</script>	<script>
+			$("#button-close-map").click(function () {
+				$("#div-fullscreen-map").addClass("not-displayed");
+			});
+
+			var map = null;
+		var latLngs = [];
+		var latLngsAll = [];
+		var latLngBranches = [];
+		var latLngsBranches = [];
+		var isMapInitialized = false;
+		var basePath= "";
+
+		// Helper function to load scripts as a promise
+		function loadScript(url) {
+			return new Promise((resolve, reject) => {
+				$.getScript(url)
+					.done(resolve)
+					.fail(() => {
+						reject(new Error(`Failed to load script: ${url}`));
+					});
+			});
+		}
+
+		// Function to load all required scripts in sequence
+		async function initializeMap() {
+			try {
+				// Load all scripts concurrently, then wait for all to complete
+				await loadScript(basePath + "/lib/npm/leaflet/leaflet.js");
+				await loadScript(basePath + "/lib/leaflet-providers/leaflet-providers.js");
+
+				await Promise.all([
+					loadScript(basePath + "/lib/leaflet-extensions/leaflet.almostover.js"),
+					loadScript(basePath + "/lib/leaflet-extensions/leaflet.geometryutil.js"),
+					loadScript(basePath + "/js/Polyline.encoded.js"),
+					loadScript(basePath + "/js/leaflet-ant-path.js"),
+					loadScript(basePath + "/js/Leaflet.fullscreen.min.js"),
+					loadScript(basePath + "/js/Leaflet.VectorGrid.bundled.js"),
+					loadScript(basePath + "/js/leaflet.markercluster.js")
+				]);
+
+				// Initialize the map after loading all required scripts
+				map = L.map("div-fullscreen-2-map-div", {
+					center: [45.849266, 24.963092],
+					zoom: 7,
+					minZoom: 6,
+					maxZoom: 14
+				});
+
+				// Add the base tile layer and wait for it to load
+				const baseLayer = L.tileLayer.provider("OpenStreetMap.Mapnik", {
+					referrerPolicy: "strict-origin-when-cross-origin"
+				}).addTo(map);
+				await new Promise(resolve => baseLayer.once('load', resolve));
+
+				map.addControl(new L.Control.Fullscreen());
+
+				await loadRefreshMap();
+
+				// Set up interval for periodic updates, starting 30 seconds after the initial call
+				setTimeout(() => {
+					setInterval(loadRefreshMap, 30000);
+				}, 30000);
+
+				$("#div-fullscreen-map").addClass("already-filled");
+				$("#div-fullscreen-map").removeClass("not-displayed");
+				$("#div-loading-map").addClass("not-displayed");
+
+				// Force map re-rendering if it was hidden during initialization
+				setTimeout(() => {
+					map.invalidateSize();// Call resetMapSize only once, after data is loaded
+					if (!isMapInitialized) {
+						resetMapSize(map, latLngsAll); // Reset map size with latLngsAll
+						isMapInitialized = true; // Set flag to true to prevent further calls
+					}
+				}, 300);
+			} catch (error) {
+				alert("Hartă temporar indisponibilă!");
+				console.error("Initialization error:", error);
+				$("#div-fullscreen-map").removeClass("not-displayed");
+				$("#div-loading-map").addClass("not-displayed");
+			}
+			$("#button-map").attr("disabled", false);
+		}
+
+		$("#button-map").click(function () {
+			$("#button-map").attr("disabled", true);
+			$("#div-loading-map").removeClass("not-displayed");
+			if(!$("#div-fullscreen-map").hasClass("already-filled")) {
+				initializeMap();
+			}
+			else {
+				$("#div-fullscreen-map").removeClass("not-displayed");
+				$("#div-loading-map").addClass("not-displayed");
+				$("#button-map").attr("disabled", false);
+			}
+		});
+
+		function loadRefreshMap () {
+			return new Promise((resolve, reject) => {
+				$.ajax({
+					url: '/ro-RO/Trains/LoadTrainMapPartial?RunningNumber=1622&DepartureDateTime=04.05.2026 16:33:00',
+					type: 'GET',
+					success: function (data) {
+						// Set the partial view content to the div
+						$("#div-train-map-script-partial").html(data);
+						clearMap();
+						setMap();
+
+						resolve(); // Resolve the promise when the request is successful
+					},
+					error: function () {
+						reject(new Error("Failed to load map data")); // Reject the promise if there's an error
+					}
+				});
+			});
+		}
+
+		function clearMap() {
+			map.eachLayer(function (layer) {
+				// Remove layers that are not the base tile layer
+				if (!layer._url) {
+					map.removeLayer(layer);
+				}
+			});
+		}
+
+	$("#button-reset-map").click(function () {
+			resetMapSize(map, latLngsAll);
+		});
+
+	</script>
+
+<script>
+	var currentSearch = $("#form-back").serialize();
+	$(".form-select-language").each(function () {
+		$(this).attr("action", $(this).attr("action") + "?" + currentSearch.replace(/&/g, "%26"));
+	});
+</script>
