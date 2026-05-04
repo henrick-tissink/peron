@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import type { BoardResponse } from "@peron/types";
+import type { BoardEntry, BoardResponse } from "@peron/types";
 import { fetchBoard } from "../lib/api-board";
 import { SplitFlap } from "./split-flap";
+import { MinutesToGo } from "./minutes-to-go";
+
+const TICKER_LIMIT = 3;
 
 export function LiveTicker() {
   const t = useTranslations("home");
@@ -22,28 +25,62 @@ export function LiveTicker() {
     return () => { cancelled = true; clearInterval(id); };
   }, []);
 
-  const top3 = (data?.entries ?? []).slice(0, 3);
+  const top = (data?.entries ?? []).slice(0, TICKER_LIMIT);
 
   return (
-    <div className="border-y border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-7 py-3.5">
-      <div className="mb-2 flex items-center gap-2 font-mono text-[10px] tracking-widest text-[var(--color-accent)] uppercase">
+    <div className="border-y border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-7 py-4">
+      <div className="mb-2.5 flex items-center gap-2 font-mono text-[10px] tracking-widest text-[var(--color-accent)] uppercase">
         <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-accent)] pulse" />
         {t("tickerLabel")}
       </div>
-      {top3.length === 0 ? (
+      {top.length === 0 ? (
         <div className="font-mono text-xs text-[var(--color-text-subtle)]">…</div>
       ) : (
-        top3.map((e, i) => (
-          <div key={i} className="grid grid-cols-[80px_1fr_100px] gap-4 py-1 font-mono text-[13px]">
-            <SplitFlap value={e.time} className="text-[var(--color-accent)]" />
-            <span className="flex items-baseline gap-2">
-              <span className="text-[var(--color-text-subtle)]">→</span>
-              <SplitFlap value={e.counterpart.name} className="text-[var(--color-text)]" />
-            </span>
-            <SplitFlap value={`${e.train.category}-${e.train.number}`} className="text-[var(--color-text-muted)] text-right" />
-          </div>
-        ))
+        <div className="space-y-2">
+          {top.map((e, i) => <TickerRow key={`${e.time}-${e.train.number}-${i}`} entry={e} />)}
+        </div>
       )}
+    </div>
+  );
+}
+
+function TickerRow({ entry }: { entry: BoardEntry }) {
+  const delayMinutes = entry.status?.kind === "delayed" ? entry.status.minutes : null;
+  const cancelled = entry.status?.kind === "cancelled";
+
+  return (
+    <div className="grid grid-cols-[60px_minmax(0,1fr)_auto] sm:grid-cols-[80px_minmax(0,1fr)_auto] items-baseline gap-3 sm:gap-4 font-mono text-[13px]">
+      <SplitFlap value={entry.time} className="text-[var(--color-accent)]" />
+
+      <div className="min-w-0">
+        <div className="flex items-baseline gap-1.5 sm:gap-2 truncate">
+          <span className="text-[var(--color-text-subtle)]">→</span>
+          <SplitFlap value={entry.counterpart.name} className="text-[var(--color-text)] truncate" />
+          {cancelled ? (
+            <span className="font-semibold text-red-500 text-[10px] tracking-widest uppercase">
+              cancelled
+            </span>
+          ) : delayMinutes !== null ? (
+            <span className="font-semibold text-amber-500 text-[11px]">+{delayMinutes}m</span>
+          ) : null}
+        </div>
+        <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[10px] tracking-wider text-[var(--color-text-muted)] uppercase">
+          <span className="text-[var(--color-accent)] font-semibold">
+            {entry.train.category}
+          </span>
+          <span>{entry.train.number}</span>
+          {entry.platform ? (
+            <span aria-label="platform">· {entry.platform}</span>
+          ) : null}
+          {entry.operator ? (
+            <span className="hidden sm:inline truncate max-w-[8rem]">· {entry.operator}</span>
+          ) : null}
+        </div>
+      </div>
+
+      <div className="text-right">
+        <MinutesToGo time={entry.time} />
+      </div>
     </div>
   );
 }

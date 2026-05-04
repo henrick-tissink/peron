@@ -89,5 +89,9 @@
     "en": "English",
     "ro": "Română",
     "de": "Deutsch"
+  },
+  "liveBadge": {
+    "now": "jetzt",
+    "inMinutes": "in {n} Min."
   }
 }
