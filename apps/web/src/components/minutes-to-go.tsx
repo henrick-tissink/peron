@@ -2,23 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-
-function bucharestNowMinutes(): number {
-  const fmt = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Bucharest",
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-  const [h, m] = fmt.format(new Date()).split(":").map(Number);
-  return (h ?? 0) * 60 + (m ?? 0);
-}
-
-function timeToMinutes(t: string): number | null {
-  const m = t.match(/^(\d{1,2}):(\d{2})$/);
-  if (!m) return null;
-  return Number(m[1]) * 60 + Number(m[2]);
-}
+import { minutesUntil } from "../lib/board-time";
 
 /**
  * Renders a "minutes-to-go" indicator next to a board entry's scheduled time.
@@ -28,10 +12,6 @@ function timeToMinutes(t: string): number | null {
  *   clutter without helping.
  * - "Now" between -1 and +1 minute (boarding/just departed feel).
  * - "in N min" otherwise. Re-renders every 10 s.
- *
- * Works around the day-rollover edge case: if a 00:30 train is parsed at 23:55,
- * the naive subtraction returns -1405. We treat any large negative value as a
- * next-day departure and add 24h.
  */
 export function MinutesToGo({
   time,
@@ -43,23 +23,18 @@ export function MinutesToGo({
   className?: string;
 }) {
   const t = useTranslations("liveBadge");
-  const [nowMin, setNowMin] = useState<number | null>(null);
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
-    setNowMin(bucharestNowMinutes());
-    const id = setInterval(() => setNowMin(bucharestNowMinutes()), 10_000);
+    setNow(new Date());
+    const id = setInterval(() => setNow(new Date()), 10_000);
     return () => clearInterval(id);
   }, []);
 
-  if (nowMin === null) return null; // SSR — defer to client to avoid hydration mismatch
+  if (now === null) return null; // SSR — defer to client to avoid hydration mismatch
 
-  const target = timeToMinutes(time);
-  if (target === null) return null;
-
-  let delta = target - nowMin;
-  // Day-rollover: a 00:30 train viewed at 23:55 is 35 min away, not -1405.
-  if (delta < -120) delta += 24 * 60;
-
+  const delta = minutesUntil(time, now);
+  if (delta === null) return null;
   if (delta > hideAfterMinutes) return null;
   if (delta < -2) return null;
 

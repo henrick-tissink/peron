@@ -6,6 +6,7 @@ import type { BoardEntry, BoardResponse } from "@peron/types";
 import { fetchBoard } from "../lib/api-board";
 import { SplitFlap } from "./split-flap";
 import { MinutesToGo } from "./minutes-to-go";
+import { StatusPill } from "./status-pill";
 
 const TICKER_LIMIT = 3;
 
@@ -45,9 +46,6 @@ export function LiveTicker() {
 }
 
 function TickerRow({ entry }: { entry: BoardEntry }) {
-  const delayMinutes = entry.status?.kind === "delayed" ? entry.status.minutes : null;
-  const cancelled = entry.status?.kind === "cancelled";
-
   return (
     <div className="grid grid-cols-[60px_minmax(0,1fr)_auto] sm:grid-cols-[80px_minmax(0,1fr)_auto] items-baseline gap-3 sm:gap-4 font-mono text-[13px]">
       <SplitFlap value={entry.time} className="text-[var(--color-accent)]" />
@@ -56,13 +54,7 @@ function TickerRow({ entry }: { entry: BoardEntry }) {
         <div className="flex items-baseline gap-1.5 sm:gap-2 truncate">
           <span className="text-[var(--color-text-subtle)]">→</span>
           <SplitFlap value={entry.counterpart.name} className="text-[var(--color-text)] truncate" />
-          {cancelled ? (
-            <span className="font-semibold text-red-500 text-[10px] tracking-widest uppercase">
-              cancelled
-            </span>
-          ) : delayMinutes !== null ? (
-            <span className="font-semibold text-amber-500 text-[11px]">+{delayMinutes}m</span>
-          ) : null}
+          <StatusPill entry={entry} variant="compact" />
         </div>
         <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[10px] tracking-wider text-[var(--color-text-muted)] uppercase">
           <span className="text-[var(--color-accent)] font-semibold">

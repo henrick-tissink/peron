@@ -10,6 +10,7 @@ export default async function StationPage({
   const { locale, slug } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("stationBoard");
+  const tKiosk = await getTranslations("kiosk");
 
   const initial = await fetchBoard(slug, "departures").catch(() => null);
   const stationName = initial?.station.name ?? slug.replace(/-/g, " ");
@@ -34,6 +35,7 @@ export default async function StationPage({
           annotation: t("annotation"),
           backToSearch: t("backToSearch"),
           noEntries: t("noEntries"),
+          kioskMode: tKiosk("enter"),
         }}
       />
     </div>

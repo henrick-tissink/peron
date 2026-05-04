@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import type { BoardEntry, BoardDirection } from "@peron/types";
 import { SplitFlap } from "./split-flap";
 import { MinutesToGo } from "./minutes-to-go";
+import { StatusPill } from "./status-pill";
 
 export function BoardRow({ entry, stationSlug, direction }: { entry: BoardEntry; stationSlug: string; direction: BoardDirection }) {
   const t = useTranslations("stationBoard");
@@ -14,8 +15,6 @@ export function BoardRow({ entry, stationSlug, direction }: { entry: BoardEntry;
   );
   const hours = entry.durationMinutes !== undefined ? Math.floor(entry.durationMinutes / 60) : null;
   const minutes = entry.durationMinutes !== undefined ? entry.durationMinutes % 60 : null;
-  const delayMinutes = entry.status?.kind === "delayed" ? entry.status.minutes : null;
-  const cancelled = entry.status?.kind === "cancelled";
   // INFOFER's "Direcția" string can list 15+ intermediate stations on
   // long-distance trains. Cap rendering at the three most prominent so the row
   // height stays reasonable; the full route is still available in the API payload.
@@ -40,11 +39,7 @@ export function BoardRow({ entry, stationSlug, direction }: { entry: BoardEntry;
               ? t("direct")
               : t("via", { stops: viaDisplay.join(" · ") + (viaOverflow > 0 ? ` +${viaOverflow}` : "") })}
           </span>
-          {cancelled ? (
-            <span className="font-semibold text-red-500 uppercase tracking-wider">CANCELLED</span>
-          ) : delayMinutes !== null ? (
-            <span className="font-semibold text-amber-500">+{delayMinutes}m</span>
-          ) : null}
+          <StatusPill entry={entry} variant="compact" />
           {entry.platform ? (
             <span className="text-[var(--color-text-muted)]">· {entry.platform}</span>
           ) : null}

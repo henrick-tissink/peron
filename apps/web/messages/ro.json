@@ -92,6 +92,15 @@
   },
   "liveBadge": {
     "now": "acum",
-    "inMinutes": "în {n}m"
+    "inMinutes": "în {n}m",
+    "boarding": "îmbarcare",
+    "cancelled": "anulat"
+  },
+  "kiosk": {
+    "platform": "LINIA",
+    "via": "prin",
+    "direct": "direct",
+    "exit": "IEȘIRE KIOSK ↗",
+    "enter": "▶ MODUL KIOSK"
   }
 }

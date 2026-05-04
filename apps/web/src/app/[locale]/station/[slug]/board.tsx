@@ -12,6 +12,7 @@ type Labels = {
   tabDepartures: string; tabArrivals: string;
   headTime: string; headDestination: string; headOrigin: string; headTrain: string; headDuration: string;
   updatedLabel: string; annotation: string; backToSearch: string; noEntries: string;
+  kioskMode?: string;
 };
 
 export function BoardClient({
@@ -106,7 +107,14 @@ export function BoardClient({
 
       <div className="flex justify-between items-center px-7 pt-4 pb-6 font-mono text-[10px] tracking-widest text-[var(--color-text-subtle)] uppercase">
         <span>{labels.annotation}</span>
-        <Link href="/" className="hover:text-[var(--color-accent)]">{labels.backToSearch}</Link>
+        <div className="flex items-center gap-5">
+          {labels.kioskMode ? (
+            <Link href={`/station/${slug}/kiosk`} className="hover:text-[var(--color-accent)]">
+              {labels.kioskMode}
+            </Link>
+          ) : null}
+          <Link href="/" className="hover:text-[var(--color-accent)]">{labels.backToSearch}</Link>
+        </div>
       </div>
     </div>
   );

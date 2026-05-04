@@ -92,6 +92,15 @@
   },
   "liveBadge": {
     "now": "now",
-    "inMinutes": "in {n}m"
+    "inMinutes": "in {n}m",
+    "boarding": "boarding",
+    "cancelled": "cancelled"
+  },
+  "kiosk": {
+    "platform": "PLATFORM",
+    "via": "via",
+    "direct": "direct",
+    "exit": "EXIT KIOSK ↗",
+    "enter": "▶ KIOSK MODE"
   }
 }
