@@ -6,7 +6,12 @@
     "heroTitle": "Finde einen Zug.",
     "heroSubtitle": "CFR Călători · Echtzeitdaten · direkt buchen",
     "popularLabel": "BELIEBT",
-    "tickerLabel": "LIVE · BUCUREȘTI NORD · NÄCHSTE ABFAHRTEN"
+    "popularStationsLabel": "BAHNHÖFE",
+    "tickerLabel": "LIVE · BUCUREȘTI NORD · NÄCHSTE ABFAHRTEN",
+    "modeLabel": "Suchmodus",
+    "tabJourney": "REISE",
+    "tabStation": "BAHNHOF",
+    "tabTrain": "ZUG"
   },
   "searchForm": {
     "fromLabel": "VON",
@@ -15,7 +20,11 @@
     "toPlaceholder": "Zielbahnhof",
     "dateLabel": "DATUM",
     "submit": "Suchen",
-    "swap": "Bahnhöfe tauschen"
+    "swap": "Bahnhöfe tauschen",
+    "stationLabel": "BAHNHOF",
+    "stationPlaceholder": "Live-Anzeige für…",
+    "trainLabel": "ZUG",
+    "trainPlaceholder": "Nummer, z.B. 1666"
   },
   "results": {
     "metaLabel": "SUCHERGEBNISSE",

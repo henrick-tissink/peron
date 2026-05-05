@@ -6,7 +6,12 @@
     "heroTitle": "Find a train.",
     "heroSubtitle": "CFR Călători · live data · book direct",
     "popularLabel": "POPULAR",
-    "tickerLabel": "LIVE · BUCUREȘTI NORD · NEXT DEPARTURES"
+    "popularStationsLabel": "STATIONS",
+    "tickerLabel": "LIVE · BUCUREȘTI NORD · NEXT DEPARTURES",
+    "modeLabel": "Search mode",
+    "tabJourney": "JOURNEY",
+    "tabStation": "STATION",
+    "tabTrain": "TRAIN"
   },
   "searchForm": {
     "fromLabel": "FROM",
@@ -15,7 +20,11 @@
     "toPlaceholder": "Arrival station",
     "dateLabel": "DATE",
     "submit": "Search",
-    "swap": "Swap stations"
+    "swap": "Swap stations",
+    "stationLabel": "STATION",
+    "stationPlaceholder": "Live board for…",
+    "trainLabel": "TRAIN",
+    "trainPlaceholder": "Number, e.g. 1666"
   },
   "results": {
     "metaLabel": "SEARCH RESULTS",

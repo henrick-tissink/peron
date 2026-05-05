@@ -6,7 +6,12 @@
     "heroTitle": "Caută un tren.",
     "heroSubtitle": "CFR Călători · date live · rezervă direct",
     "popularLabel": "POPULARE",
-    "tickerLabel": "LIVE · BUCUREȘTI NORD · URMĂTOARELE PLECĂRI"
+    "popularStationsLabel": "STAȚII",
+    "tickerLabel": "LIVE · BUCUREȘTI NORD · URMĂTOARELE PLECĂRI",
+    "modeLabel": "Mod de căutare",
+    "tabJourney": "CĂLĂTORIE",
+    "tabStation": "STAȚIE",
+    "tabTrain": "TREN"
   },
   "searchForm": {
     "fromLabel": "DE LA",
@@ -15,7 +20,11 @@
     "toPlaceholder": "Stație de sosire",
     "dateLabel": "DATA",
     "submit": "Caută",
-    "swap": "Inversează stațiile"
+    "swap": "Inversează stațiile",
+    "stationLabel": "STAȚIE",
+    "stationPlaceholder": "Tabela live pentru…",
+    "trainLabel": "TREN",
+    "trainPlaceholder": "Număr, ex. 1666"
   },
   "results": {
     "metaLabel": "REZULTATE CĂUTARE",

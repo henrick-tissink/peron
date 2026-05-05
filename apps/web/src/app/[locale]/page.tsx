@@ -1,9 +1,8 @@
 import type { Station } from "@peron/types";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { fetchStations } from "../../lib/api";
-import { SearchForm } from "../../components/search-form";
+import { HomeSearch } from "../../components/home-search";
 import { LiveTicker } from "../../components/live-ticker";
-import { Link } from "../../i18n/navigation";
 
 async function loadStations(): Promise<Station[]> {
   try {
@@ -33,28 +32,8 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
             {t("heroSubtitle")}
           </p>
         </section>
-        <SearchForm stations={stations} />
-        <p className="mt-10 text-center font-mono text-[11px] tracking-widest text-[var(--color-text-subtle)] uppercase">
-          {t("popularLabel")} ·
-          <PopularChip from="Bucuresti-Nord" to="Cluj-Napoca" label="BUC NORD → CLUJ" />
-          ·
-          <PopularChip from="Bucuresti-Nord" to="Brasov" label="BUC NORD → BRAȘOV" />
-          ·
-          <PopularChip from="Timisoara-Nord" to="Bucuresti-Nord" label="TIMIȘOARA → BUC NORD" />
-        </p>
+        <HomeSearch stations={stations} />
       </div>
     </>
-  );
-}
-
-function PopularChip({ from, to, label }: { from: string; to: string; label: string }) {
-  const params = new URLSearchParams({ from, to, date: new Date(Date.now() + 86400_000).toISOString().slice(0, 10) });
-  return (
-    <Link
-      href={`/search?${params.toString()}`}
-      className="mx-1.5 border-b border-dashed border-[var(--color-accent)]/40 text-[var(--color-accent)] hover:border-[var(--color-accent)]"
-    >
-      {label}
-    </Link>
   );
 }

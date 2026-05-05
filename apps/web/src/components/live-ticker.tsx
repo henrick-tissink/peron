@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { BoardEntry, BoardResponse } from "@peron/types";
+import { Link, useRouter } from "../i18n/navigation";
 import { fetchBoard } from "../lib/api-board";
 import { SplitFlap } from "./split-flap";
 import { MinutesToGo } from "./minutes-to-go";
@@ -46,14 +47,43 @@ export function LiveTicker() {
 }
 
 function TickerRow({ entry }: { entry: BoardEntry }) {
+  const router = useRouter();
+  const trainHref = `/train/${encodeURIComponent(entry.train.number)}`;
+  const stationHref = `/station/${entry.counterpart.slug}`;
+
+  // Whole row navigates to train tracking — that's the live magic. The
+  // destination name is a nested Link to its station board for users who care
+  // about the destination, not the train. Stop propagation so the inner Link
+  // wins. Same pattern as components/board-row.tsx.
   return (
-    <div className="grid grid-cols-[60px_minmax(0,1fr)_auto] sm:grid-cols-[80px_minmax(0,1fr)_auto] items-baseline gap-3 sm:gap-4 font-mono text-[13px]">
+    <div
+      role="link"
+      tabIndex={0}
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("a")) return;
+        router.push(trainHref);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          router.push(trainHref);
+        }
+      }}
+      className="grid grid-cols-[60px_minmax(0,1fr)_auto] sm:grid-cols-[80px_minmax(0,1fr)_auto] items-baseline gap-3 sm:gap-4 font-mono text-[13px] cursor-pointer transition-colors hover:bg-[var(--color-bg-elev)]/40 focus:outline-none focus:bg-[var(--color-bg-elev)]/40 -mx-3 px-3 py-1 rounded-sm"
+    >
       <SplitFlap value={entry.time} className="text-[var(--color-accent)]" />
 
       <div className="min-w-0">
         <div className="flex items-baseline gap-1.5 sm:gap-2 truncate">
           <span className="text-[var(--color-text-subtle)]">→</span>
-          <SplitFlap value={entry.counterpart.name} className="text-[var(--color-text)] truncate" />
+          <Link
+            href={stationHref}
+            onClick={(e) => e.stopPropagation()}
+            className="truncate hover:text-[var(--color-accent)]"
+            aria-label={`Live board for ${entry.counterpart.name}`}
+          >
+            <SplitFlap value={entry.counterpart.name} className="text-[var(--color-text)] truncate" />
+          </Link>
           <StatusPill entry={entry} variant="compact" />
         </div>
         <div className="mt-0.5 flex flex-wrap items-center gap-x-2 text-[10px] tracking-wider text-[var(--color-text-muted)] uppercase">
